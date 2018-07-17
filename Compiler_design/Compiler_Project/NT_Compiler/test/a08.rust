@@ -1,0 +1,18 @@
+let mut c;
+let mut a = 5;
+    
+fn mul(a:int, b:int) -> int
+{
+  return a * b;
+}
+    
+fn main() 
+{
+  c = mul(a, 15);
+  if (c > 10) {
+    println -c;
+  }
+  else {
+    println c;
+  }
+}

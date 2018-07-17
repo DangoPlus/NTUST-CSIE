@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+[-HKEY_CLASSES_ROOT\Unknown\shell\opendlg]
+[-HKEY_CLASSES_ROOT\Unknown\shell\opendlg\command]
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\pintostartscreen]
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\pintostartscreen\command]

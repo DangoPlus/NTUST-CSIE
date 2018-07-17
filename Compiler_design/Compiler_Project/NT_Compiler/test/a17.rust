@@ -1,0 +1,25 @@
+let mut c;
+let mut a = 5;
+
+
+fn add2(a:int, b:int) -> int
+{
+ return a + b + 100;
+}
+
+
+fn add(a:int, b:int) -> int
+{
+  return add2(a, b);
+}
+    
+fn main() 
+{
+  c = add(a, 2);
+  if (c > 10) {
+    println -c;
+  }
+  else {
+    println c;
+  }
+}

@@ -1,0 +1,4 @@
+command: scp go_scanner.lex A10515001@140.118.155.208:/local/A10515001
+lex go_scanner.lex
+cc -o scanner -O lex.yy.c
+./scanner < example.go

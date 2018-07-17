@@ -1,0 +1,10 @@
+import numpy as np
+a = np.loadtxt('data.txt')
+b = np.loadtxt('answer.txt')
+b = b.reshape(5,1)
+print('------ DATA ------')
+print(a)
+print('------ ANSWER ------')
+print(b)
+print('------ DATA + ANSWER ------')
+print(a + b)

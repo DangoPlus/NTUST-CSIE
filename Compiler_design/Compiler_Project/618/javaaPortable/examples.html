@@ -1,0 +1,229 @@
+<html>
+<head>
+<title>Java Bytecode Assembler Examples</title>
+</head>
+<body>
+<center>
+<h1>Examples</h1>
+</center>
+<h2>Hello, World!</h2>
+<p>
+The king of all sample programs is shown and analyzed below:
+<pre>
+class HelloWorldApp
+{ 
+  method public static void main (java.lang.String[])
+  max_stack 2
+  { 
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "Hello World!"
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+    return
+  }
+}
+</pre>
+This program prints out "Hello World!".  Note that this is a stand-alone Java
+application, NOT an applet.  A line-by-line analysis of the program is shown
+below:
+<p>
+<pre>
+class HelloWorldApp
+</pre>
+This is the declaration of the class HelloWorldApp.  Note that the assembler
+generates a .class file based on the name of the class, not the name of the
+.jasm file.  The class declaration can also include modifiers such as
+<b>abstract</b>, <b>final</b>, <b>public</b>, and <b>interface</b>.  The class
+declaration can be followed by the <b>extends</b> or <b>implements</b>
+clauses.
+<p> 
+<pre>
+  method public static void main (java.lang.String[])
+</pre>
+This is the declaration for the method named <b>main</b>.  Note the similarity
+to the Java method declaration (except for the additional <b>method</b>
+keyword preceeding the declaration).  This method takes as an argument an
+array of references to the class <b>java.lang.String</b> (as do all <b>main</b>
+methods).
+<p>
+<pre>
+  max_stack 2
+</pre>
+This line declares what the maximum size of the stack will be (in this case,
+it is two).  This line can be followed by a <b>max_locals</b> line to denote
+the maximum number of local variables.  If there is no <b>max_locals</b> line,
+the assembler automatically calculates it based on the declarations of
+<a href="features.html#localvar">named local variables</a>.
+<p>
+<pre>
+    getstatic java.io.PrintStream java.lang.System.out
+</pre>
+This line says to get a reference to the static field <b>out</b> from the 
+<b>java.lang.System</b> class and push it onto the stack.  The field's type 
+is <b>java.io.PrintStream</b>.
+<p>
+<pre>
+    ldc "Hello World!"
+</pre>
+This line pushes the string "Hello World!" onto the stack.  The <b>ldc</b>
+command can take any <a href="jasm.html#constant">constant</a> as an
+argument.
+<p>
+<pre>
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+</pre>
+This line invokes the virtual method <b>println</b> found in the 
+<b>java.io.PrintStream</b> class.  The method takes a string as an argument
+(thus the <b>ldc "Hello World!"</b> command).  Also, since this is a virtual
+method, a reference to an object must also be on the stack (thus the 
+<b>getstatic</b> command).
+<p>
+Note that since methods can be overloaded, the entire method declaration
+(or signature) is required.
+<p>
+<pre>
+    return
+</pre>
+This command causes the method to return <b>void</b>.
+<p>
+<h2>A More Complex Example</h2>
+The following example incorporates many of the more complex bytecode operands 
+assembly language syntax.  The program is nonsensical, and simply provides
+examples of various features of the assembler.  The comments should provide
+assistance in understanding the code.  The assembly code is shown below:
+<pre>
+class HelloWorldApp
+extends java.lang.Object
+{ 
+  Field java.lang.String tester   /*field declaration*/
+  Field int myintfield = 125
+ 
+  Method public static void main (java.lang.String[])
+  max_stack 5
+  max_locals 12
+  {
+    /*Sample accessing a class's own field (by creating an instance of it)*/
+    new HelloWorldApp 	/* create new instance of this class */
+    dup 		/*duplicate the value on the stack (i.e. the 
+			  instance of the class)*/
+    invokenonvirtual void HelloWorldApp.&lt;init&gt;()
+    HelloWorldApp myvar /* this is a variable declaration */
+    store myvar 	/* store the instance of the class in myvar */
+    load myvar
+    ldc "Hello Country!"
+    putfield java.lang.String tester /* store "Hello Country!" in tester */
+    getstatic java.io.PrintStream java.lang.System.out
+    load myvar 		/* This is here, cuz to get field, must have reference
+		   	   to the class instance on stack */
+    getfield java.lang.String tester
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+
+    
+    ldc 575
+    lookupswitch default nowhere 
+    {
+	1       : mylabel
+	5       : mysecondlabel
+	3356    : mythirdlabel
+    }
+    
+nowhere:
+    ldc 99
+    tableswitch 85 to 87 default here 
+    {
+        mylabel
+	mysecondlabel
+	mythirdlabel
+    }
+
+    /* sample use of long (or other constants) */
+here:
+    long mylong
+    ldc 558359L		/* should be ldc2_w, but assembler figures that out */ 
+    store mylong	/* assembler generates lstore command */
+    getstatic java.io.PrintStream java.lang.System.out
+    load mylong
+    invokevirtual void java.io.PrintStream.println(long)
+
+mylabel:
+    /* sample use of double */
+    double mydouble
+    ldc 3.14159267		/* should be ldc2_w, but assembler figures that out */ 
+    dstore 10	/* can use slot numbers or local var names here */
+    getstatic java.io.PrintStream java.lang.System.out
+    dload 10
+    invokevirtual void java.io.PrintStream.println(double)
+
+mysecondlabel:
+    /*sample use of array*/
+    int[] myintarray 	/*variable declaration*/
+    bipush 5 		/*number of elements in the array*/
+    newarray int
+    store myintarray
+    load myintarray
+    bipush 1 		/*index to store the upcoming value in*/
+    bipush 49 		/*value to store in the array*/
+    iastore
+    getstatic java.io.PrintStream java.lang.System.out
+    load myintarray
+    bipush 1
+    iaload 		/*gets the value from array and leaves it on the stack*/
+    invokevirtual void java.io.PrintStream.println(int)
+   
+mythirdlabel: 
+    /*sample use of array of references*/
+    HelloWorldApp[]  myrefarray 	/*variable declaration*/
+    bipush 5 		/*number of elements in the array*/
+    anewarray HelloWorldApp
+    store myrefarray
+    load myrefarray
+    bipush 0 		/*index to store the upcoming value in*/
+    load myvar		/* this is a pointer to an instance of this class,
+			   it's the value to store in the array */
+    aastore
+    load myrefarray
+    bipush 0
+    aaload 		/*gets the value from array and leaves it on the stack*/
+    ldc "Hello Country!"
+    putfield java.lang.String tester /* store "Hello Country!" in tester */
+    getstatic java.io.PrintStream java.lang.System.out
+    load myrefarray
+    bipush 0
+    aaload 		/*gets the value from array and leaves it on the stack*/
+    getfield java.lang.String tester
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+    /* Generic Hello World */
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "Hello World, Everyone!"
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+myfourthlabel:    return
+myfifthlabel: 
+    pop
+    return
+   
+    linenumbertable   /*sample only! doesn't correspond to specific file!*/
+    {
+      mysecondlabel 10
+      mythirdlabel  14
+      myfourthlabel 22
+    }
+    localvariabletable /*sample only! doesn't correspond to specific vars!*/
+    {
+      mysecondlabel mythirdlabel int myint 3
+      mylabel myfifthlabel byte mybyte 2
+    } 
+  }
+
+  /* the init class (i.e. constructor) */
+  Method void &lt;init&gt; ()
+  max_stack 2
+  max_locals 1
+  {
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "In the init method!"
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+    aload_0 /* this is the instance of the class "passed" in as variable 0 */ 
+    invokenonvirtual void java.lang.Object.&lt;init&gt;() /*call superclass init*/
+    return
+  }
+}
+</pre>

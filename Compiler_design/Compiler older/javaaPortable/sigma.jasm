@@ -1,0 +1,59 @@
+class sigma
+{
+/* Line4: */
+/* Line5: */
+/* Line7:const int n = 10; */
+  field static int sum
+  field static int index
+/* Line8:int sum, index; */
+/* Line9: */
+  method public static void main(java.lang.String[])
+  max_stack 30
+  max_locals 15
+  {
+/* Line10:void main() */
+/* Line11:{ */
+    sipush 0
+    putstatic int sigma.index
+/* Line12:    index = 0; */
+    sipush 0
+    putstatic int sigma.sum
+/* Line13:    sum = 0; */
+L0:
+    getstatic int sigma.index
+    sipush 10
+    isub /* a and b are at stack top */
+    ifle L1
+    iconst_0 /* false = 0 */
+    goto L2
+L1:
+    iconst_1 /* true = 1 */
+L2:
+    ifeq L3
+/* Line14:    while (index <= n) */
+/* Line15:    { */
+    getstatic int sigma.sum
+    getstatic int sigma.index
+    iadd
+    putstatic int sigma.sum
+/* Line16:      sum = sum + index; */
+    getstatic int sigma.index
+    sipush 1
+    iadd
+    putstatic int sigma.index
+/* Line17:      index = index + 1; */
+    goto L0
+L3:
+/* Line18:    } */
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "The sum is " 
+    invokevirtual void java.io.PrintStream.print(java.lang.String)
+/* Line19:    print "The sum is "; */
+    getstatic java.io.PrintStream java.lang.System.out
+    getstatic int sigma.sum
+    invokevirtual void java.io.PrintStream.println(int)
+/* Line20:    println sum; */
+    return
+  }
+/* Line21:} */
+}

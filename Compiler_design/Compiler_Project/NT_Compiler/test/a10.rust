@@ -1,0 +1,15 @@
+fn main() {
+    let mut n:int = 20; 
+    let mut Fn = 1;
+    let mut FNminus1 = 1;
+    let mut temp:int;
+    
+    while (n != 2) {
+      temp = Fn;
+      Fn = Fn + FNminus1;
+      FNminus1 = temp;
+      n = n - 1;
+    }
+    
+    println Fn;
+}

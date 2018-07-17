@@ -1,0 +1,10 @@
+// Hello World Example
+let a: float = 4;
+let b: int = 7;
+let c = 10.11;
+let mut d = 10;
+
+fn main() {
+  // Print text to the console
+  println ("Hello World");
+}

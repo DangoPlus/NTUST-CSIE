@@ -1,0 +1,31 @@
+let mut c;
+let mut a = 15;
+    
+fn add(a:int, b:int) -> int
+{
+  return a+b;
+}
+    
+fn main() 
+{
+  c = add(a, 10);
+  if (c > 10) {
+     c = c + 10;
+  }
+  else {
+     c = c - 10;
+  }
+  if (c % 2 == 1) {
+     c = c + 100;
+  } 
+  while (c > 1) {
+     c = c - 1;
+     if (c % 2 == 1) {
+        c = c / 2;
+     }
+     if (c % 3 == 0) {
+        c = c / 3;
+     }
+  }
+  println c;
+}

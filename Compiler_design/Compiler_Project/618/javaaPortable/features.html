@@ -1,0 +1,85 @@
+<html>
+<head>
+<title>Java(tm) Bytecode Assembler Features</title>
+</head>
+<body>
+<center>
+<h1>Assembler Features</h1>
+</center>
+The assembler offers a number of features to eliminate complexity in 
+programming in Java bytecodes:
+<ul>
+<li><b>Automatic generation of binary .class file</b>
+<p>
+The assembler reads in an ascii file written in a <a href="jasm.html">
+Java assembly language</a> and automatically tracks code lengths and attribute
+counts.  The assembler then generates a binary .class file that conforms to 
+the <a href="http://java.sun.com/java.sun.com/newdocs.html#JVM">Java Virtual
+Machine specification</a>.
+<p>
+<li><b>Automatic generation of constant pool</b>
+<p>
+The Java assembly language provides no means of directly manipulating the 
+constant pool.  Rather, operands that take constant pool offsets as arguments
+instead take the contents of that offset as an argument.  
+<p>
+For example, the <b>new</b> operand in the Java VM Spec takes an index into 
+the constant pool.  This index must point to a constant of type CONSTANT_Class,
+which in turn points to a CONSTANT_Utf8 entry in the constant pool representing
+the class's name.  Using the assembly language, a programmer need not deal
+with the constant pool.  The instruction might simply state 
+<b>new java.lang.Object</b>.
+<p>
+Since the assembler automatically generates the constant pool, the programmer
+also doesn't need to wonder if he should use an operand like <b>ldc_w</b>
+instead of <b>ldc</b>.  The assembler automatically outputs the proper 
+command based on the size of the generated constant pool index.
+<p>
+<a name="localvar"><li><b>Named Local Variables</b>
+<p>
+The assembly language allows programmers to declare and use named local
+variables rather than simply slot numbers.  Although programmers still have
+the freedom to use slot numbers (and may wish to, in order to decrease the 
+number of needed slots), named local variables offer a number of benefits.
+<p>
+When a local variable is declared (using syntax like <b>int MyInt</b> in the
+code portion of a method), the assembler automatically allocates a slot number
+to that local variable.  When that local variable is then used in an operation
+(like <b>iload MyInt</b>), the assembler automatically substitutes the proper
+slot number.  The assembler also tracks the count of <b>max_locals</b>
+and enters that in the class file (unless the programmer provided a value for
+<b>max_locals</b>).  Named local variables also make an assembly program
+much easier to read, understand, and debug.
+<p>
+The programmer can also use the special operands of <b>load</b> and 
+<b>store</b>.  These commands are not in the Java VM Spec, but provide for
+easier programming.  Following the above example, if the programmer types
+<b>store MyInt</b> the assembler knows that MyInt has a type of int and will
+automatically generate the <b>istore</b> command with the proper slot number.
+This might be particularly helpful in an assembly language class, since it
+reduces the number of instructions a student needs to learn.
+<p>
+<li><b>Labels</b>
+<p>
+Since manually calculating byte offsets is disliked by most programmers, the
+assembly language provides for use of labels to mark a position in a piece
+of code. (In fact, the assembly language does not allow the programmer to 
+manually calculate offsets.)
+<p>
+A label declaration should be an identifier followed immediately be a colon 
+(with no space between the identifier and colon).  So one line of code might
+read <b>MyLabel: istore MyInt</b>.  Later the programmer may include an
+operation such as <b>goto MyLabel</b>.  The assembler will automatically 
+calculate the offset to <b>MyLabel</b> and enter that into the code.  It will
+also change the <b>goto</b> operand to <b>goto_w</b> if the offset is large
+enough.  Thus the programmer need not worry about calculating the offset
+or changing the operation based on the size of the offset.
+<p>
+Labels are used anywhere a code offset is needed.  This include commands such
+as <b>tableswitch</b> as well as the exceptions, line number, and local 
+variable tables which come at the end of a method.
+<p>
+</ul>
+The assembler and its corresponding language provide a number of other features
+(such as Java-like method and class declarations) which are fairly 
+straight-forward.

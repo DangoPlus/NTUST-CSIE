@@ -1,0 +1,65 @@
+class example
+{
+  field static int a
+/* Line1:int a; */
+  method public static int add(int,int)
+  max_stack 30
+  max_locals 15
+  {
+/* Line2:int add (int a, b) */
+/* Line3:{ */
+    iload 0
+    iload 1
+    iadd
+    ireturn
+/* Line4:  return a+b; */
+  }
+/* Line5:} */
+/* Line6: */
+  method public static void main (java.lang.String[])
+  max_stack 30
+  max_locals 15
+  {
+/* Line7:main() */
+/* Line8:{ */
+/* Line9:  int c; */
+    sipush 5
+    putstatic int example.a
+/* Line10:  a = 5; */
+    getstatic int example.a
+    sipush 10
+    invokestatic int example.add(int,int)
+    istore 0
+/* Line11:  c = add(a, 10); */
+    iload 0
+    sipush 10
+    isub /* a and b are at stack top */
+    ifgt L0
+    iconst_0 /* false = 0 */
+    goto L1
+L0:
+    iconst_1 /* true = 1 */
+L1:
+    ifeq L2
+/* Line12:  if (c > 10) */
+    getstatic java.io.PrintStream java.lang.System.out
+    iload 0
+    ineg
+    invokevirtual void java.io.PrintStream.print(int)
+/* Line13:    print -c; */
+    goto L3
+L2:
+/* Line14:  else */
+    getstatic java.io.PrintStream java.lang.System.out
+    iload 0
+    invokevirtual void java.io.PrintStream.print(int)
+L3:
+/* Line15:    print c; */
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "Hello World" 
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+/* Line16:  println "Hello World"; */
+    return
+  }
+/* Line17:} */
+}

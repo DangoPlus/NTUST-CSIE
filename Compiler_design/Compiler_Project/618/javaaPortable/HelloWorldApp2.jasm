@@ -1,0 +1,134 @@
+HelloWorldApp2
+extends java.lang.Object
+{ 
+  Field java.lang.String tester
+  Field int myintfield = 125 
+  Method public static void main (java.lang.String[])
+  max_stack 5
+  max_locals 12
+  {
+    /*Sample accessing a class's own field (by creating an instance of it)*/
+    new HelloWorldApp 	/* create new instance of this class */
+    dup 		/*duplicate the value on the stack (i.e. the 
+			  instance of the class)*/
+    invokenonvirtual void HelloWorldApp.<init>()
+    HelloWorldApp myvar /* this is a variable declaration */
+    store myvar 	/* store the instance of the class in myvar */
+    load myvar
+    ldc "Hello Country!"
+    putfield java.lang.String tester /* store "Hello Country!" in tester */
+    getstatic java.io.PrintStream java.lang.System.out
+    load myvar 		/* This is here, cuz to get field, must have reference
+		   	   to the class instance on stack */
+    getfield java.lang.String tester
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+
+    
+    ldc 575
+    lookupswitch default nowhere 
+    {
+	1       : mylabel
+	5       : mysecondlabel
+	3356    : mythirdlabel
+    }
+    
+nowhere:
+    ldc 99
+    tableswitch 85 to 87 default here 
+    {
+        mylabel
+	mysecondlabel
+	mythirdlabel
+    }
+
+    /* sample use of long (or other constants) */
+here:
+    long mylong
+    ldc 558359L		/* should be ldc2_w, but assembler figures that out */ 
+    store mylong	/* assembler generates lstore command */
+    getstatic java.io.PrintStream java.lang.System.out
+    load mylong
+    invokevirtual void java.io.PrintStream.println(long)
+
+mylabel:
+    /* sample use of double */
+    double mydouble
+    ldc 3.14159267		/* should be ldc2_w, but assembler figures that out */ 
+    dstore 10	/* can use slot numbers or local var names here */
+    getstatic java.io.PrintStream java.lang.System.out
+    dload 10
+    invokevirtual void java.io.PrintStream.println(double)
+
+mysecondlabel:
+    /*sample use of array*/
+    int[] myintarray 	/*variable declaration*/
+    bipush 5 		/*number of elements in the array*/
+    newarray int
+    store myintarray
+    load myintarray
+    bipush 1 		/*index to store the upcoming value in*/
+    bipush 49 		/*value to store in the array*/
+    iastore
+    getstatic java.io.PrintStream java.lang.System.out
+    load myintarray
+    bipush 1
+    iaload 		/*gets the value from array and leaves it on the stack*/
+    invokevirtual void java.io.PrintStream.println(int)
+   
+mythirdlabel: 
+    /*sample use of array of references*/
+    HelloWorldApp[]  myrefarray 	/*variable declaration*/
+    bipush 5 		/*number of elements in the array*/
+    anewarray HelloWorldApp
+    store myrefarray
+    load myrefarray
+    bipush 0 		/*index to store the upcoming value in*/
+    load myvar		/* this is a pointer to an instance of this class,
+			   it's the value to store in the array */
+    aastore
+    load myrefarray
+    bipush 0
+    aaload 		/*gets the value from array and leaves it on the stack*/
+    ldc "Hello Country!"
+    putfield java.lang.String tester /* store "Hello Country!" in tester */
+    getstatic java.io.PrintStream java.lang.System.out
+    load myrefarray
+    bipush 0
+    aaload 		/*gets the value from array and leaves it on the stack*/
+    getfield java.lang.String tester
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+    /* Generic Hello World */
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "Hello World, Everyone!"
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+myfourthlabel:    return
+myfifthlabel: 
+    pop
+    return
+   
+    linenumbertable   /*sample only! doesn't correspond to specific file!*/
+    {
+      mysecondlabel 10
+      mythirdlabel  14
+      myfourthlabel 22
+    }
+    localvariabletable /*sample only! doesn't correspond to specific vars!*/
+    {
+      mysecondlabel mythirdlabel int myint 3
+      mylabel myfifthlabel byte mybyte 2
+    } 
+  }
+
+  /* the init class (i.e. constructor) */
+  Method void <init> ()
+  max_stack 2
+  max_locals 1
+  {
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "In the init method!"
+    invokevirtual void java.io.PrintStream.println(java.lang.String)
+    aload_0 /* this is the instance of the class "passed" in as variable 0 */ 
+    invokenonvirtual void java.lang.Object.<init>()
+    return
+  }
+}

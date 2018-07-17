@@ -1,0 +1,59 @@
+/*-------------------------------------------------*/
+/*              Java Assembly Code                 */
+/*-------------------------------------------------*/
+class sigma
+{
+/* 5: const n: 10; */
+  field static int sum
+/* 6: int sum; */
+/* 7:  */
+  method public static void main(java.lang.String[])
+  max_stack 15
+  {
+/* 8: main() */
+/* 9: { */
+/* 10:   int index; */
+    sipush 0
+    istore 0
+/* 11:   index = 0; */
+    sipush 0
+    putstatic int sigma.sum
+/* 12:   sum = 0; */
+L0:
+    iload 0
+    sipush 10
+    isub
+    ifle L1
+    iconst_0
+    goto L2
+L1:
+    iconst_1
+L2:
+    ifeq L3
+/* 13:   while (index <= n)  */
+/* 14:   { */
+    getstatic int sigma.sum
+    iload 0
+    iadd
+    putstatic int sigma.sum
+/* 15:     sum = sum + index; */
+    iload 0
+    sipush 1
+    iadd
+    istore 0
+/* 16:     index = index + 1; */
+    goto	L0
+L3:
+/* 17:   } */
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "The sum is "
+    invokevirtual void java.io.PrintStream.print(java.lang.String)
+/* 18:   print "The sum is "; */
+    getstatic java.io.PrintStream java.lang.System.out
+    getstatic int sigma.sum
+    invokevirtual void java.io.PrintStream.println(int)
+/* 19:   println sum; */
+    return
+  }
+/* 20: } */
+}

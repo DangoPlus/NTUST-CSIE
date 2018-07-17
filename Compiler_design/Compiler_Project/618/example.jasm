@@ -1,0 +1,38 @@
+class example
+{
+ 	field static int sum = 0
+	field static int index = 0
+	method public static void main(java.lang.String[])
+	max_stack 15
+	max_locals 15
+	{
+	Lbegin:
+		getstatic int example.index
+		sipush 10
+		isub
+		ifle Ltrue
+		iconst_0
+		goto Lfalse
+	Ltrue:
+		iconst_1
+	Lfalse:
+		ifeq Lexit
+		getstatic int example.sum
+		getstatic int example.index
+		iadd
+		putstatic int example.sum
+		getstatic int example.index
+		sipush 1
+		iadd
+		putstatic int example.index
+		goto Lbegin
+	Lexit:
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "The sum is "
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int example.sum
+		invokevirtual void java.io.PrintStream.println(int)
+		return
+	}
+}

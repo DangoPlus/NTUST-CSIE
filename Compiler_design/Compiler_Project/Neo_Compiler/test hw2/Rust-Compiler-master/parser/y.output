@@ -1,0 +1,6570 @@
+Terminals unused in grammar
+
+   ABSTRACT
+   ALIGNOF
+   AS
+   BE
+   BREAK
+   CONST
+   CONTINUE
+   CRATE
+   DO
+   EXTERN
+   FINAL
+   FOR
+   IMPL
+   IN
+   MACRO_RULES
+   MACRO
+   MOD
+   MOVE
+   OFFSETOF
+   OVERRIDE
+   PRIV
+   PUB
+   PURE
+   SIZEOF
+   STATIC
+   SELF
+   SUPER
+   TRAIT
+   TYPEOF
+   TYPE
+   UNSAFE
+   UNSIZED
+   USE
+   VIRTUAL
+   WHERE
+   YIELD
+   U16
+   U32
+   U64
+   I8
+   I16
+   I64
+   F32
+   F64
+   USIZE
+   ISIZE
+   CHAR
+   STR
+   POUNDNOT
+   POUND
+   DOLLAR
+   ANDEQU
+   OREQU
+   EXCOREQU
+   EXCLUSIVEOR
+   LOGICLEFTSHIFTEQU
+   LOGICLEFTSHIFT
+   LOGICRIGHTSHIFTEQU
+   LOGICRIGHTSHIFT
+   DDOT
+   TDOT
+   UNKNOWN
+   STRING
+   NOT
+   REM
+
+
+由于冲突，解析器中的规则不起作用
+
+   52 let: LET pat COLON type
+
+
+状态 80 conflicts: 1 shift/reduce
+状态 82 conflicts: 1 shift/reduce
+状态 160 conflicts: 1 shift/reduce
+状态 187 conflicts: 1 shift/reduce
+状态 188 conflicts: 1 shift/reduce
+状态 191 conflicts: 1 shift/reduce
+状态 192 conflicts: 1 shift/reduce
+状态 224 conflicts: 1 shift/reduce
+状态 225 conflicts: 1 shift/reduce
+状态 227 conflicts: 1 shift/reduce
+状态 237 conflicts: 13 shift/reduce
+状态 247 conflicts: 13 shift/reduce
+状态 249 conflicts: 13 shift/reduce
+状态 250 conflicts: 1 shift/reduce
+状态 251 conflicts: 1 shift/reduce
+状态 252 conflicts: 1 shift/reduce
+状态 253 conflicts: 1 shift/reduce
+状态 254 conflicts: 1 shift/reduce
+状态 255 conflicts: 1 shift/reduce
+状态 256 conflicts: 1 shift/reduce
+状态 257 conflicts: 1 shift/reduce
+状态 258 conflicts: 1 shift/reduce
+状态 259 conflicts: 1 shift/reduce
+状态 260 conflicts: 1 shift/reduce
+状态 261 conflicts: 1 shift/reduce
+状态 262 conflicts: 13 shift/reduce
+状态 269 conflicts: 13 shift/reduce
+状态 286 conflicts: 1 shift/reduce
+
+
+语法
+
+    0 $accept: program $end
+
+    1 program: crate
+
+    2 crate: items
+
+    3 items: item items
+    4      | item
+
+    5 item: funct
+    6     | enum
+    7     | struct
+
+    8 funct: FN ID LPAREN fn_params RPAREN block
+    9      | FN ID LPAREN fn_params RPAREN ELEMENTSELECT type block
+   10      | FN ID LPAREN fn_params RPAREN ELEMENTSELECT EXCL block
+   11      | FN ID LPAREN RPAREN block
+   12      | FN ID LPAREN RPAREN ELEMENTSELECT type block
+   13      | FN ID LPAREN RPAREN ELEMENTSELECT EXCL block
+
+   14 block: LCBRACK RCBRACK
+   15      | LCBRACK stmts RCBRACK
+
+   16 stmts: stmt stmts
+   17      | stmt
+   18      | exp
+
+   19 stmt: exp SEMICOLON
+   20     | let SEMICOLON
+   21     | RETURN exp SEMICOLON
+   22     | RETURN SEMICOLON
+
+   23 fn_params: fn_param COMMA fn_params
+   24          | fn_param
+
+   25 fn_param: pat COLON type
+
+   26 enum: ENUM ID LCBRACK enum_ctor_defs RCBRACK
+
+   27 enum_ctor_defs: enum_ctor_def COMMA enum_ctor_defs
+   28               | enum_ctor_def
+
+   29 enum_ctor_def: ID
+   30              | ID LPAREN ctor-types RPAREN
+
+   31 ctor-types: type COMMA ctor-types
+   32           | type
+
+   33 struct: STRUCT ID LCBRACK struct_field_defs RCBRACK
+
+   34 struct_field_defs: struct_field_def COMMA struct_field_defs
+   35                  | struct_field_def
+
+   36 struct_field_def: ID COLON type
+
+   37 type: BOOL
+   38     | BOOL SEMICOLON type
+   39     | AND type
+   40     | AND MUT type
+   41     | BOX LESS type GREATER
+   42     | ID
+   43     | LITDEC
+   44     | I32
+   45     | I32 SEMICOLON type
+   46     | type SEMICOLON LITDEC
+   47     | U8
+   48     | LPAREN RPAREN
+   49     | LBRACK type RBRACK
+
+   50 box_new: BOX QUALIFIER NEW LPAREN exp RPAREN
+
+   51 let: LET pat
+   52    | LET pat COLON type
+   53    | LET pat COLON type EQU exp
+   54    | LET pat EQU exp
+
+   55 pat: prim_lit
+   56    | name_bind
+   57    | LPAREN RPAREN
+   58    | deref-pat
+   59    | array_pat
+   60    | enum_pat
+   61    | struct_pat
+   62    | SUB LITDEC
+   63    | UNDER
+
+   64 deref-pat: AND pat
+
+   65 name_bind: ID
+   66          | REF ID
+   67          | REF MUT ID
+   68          | MUT ID
+
+   69 address: AND exp
+
+   70 address-mut: AND MUT exp
+
+   71 deref: MUL exp
+
+   72 array_pat: LBRACK array_elems RBRACK
+
+   73 array_elems: pat COMMA array_elems
+   74            | pat
+
+   75 enum_pat: ID QUALIFIER ID
+   76         | ID QUALIFIER ID LPAREN enum-ctors RPAREN
+
+   77 enum-ctors: pat COMMA enum-ctors
+   78           | pat
+
+   79 struct_pat: ID LCBRACK pat-fields RCBRACK
+
+   80 pat-fields: pat-field COMMA pat-fields
+   81           | pat-field
+
+   82 pat-field: ID COLON pat
+
+   83 exps: exp COMMA exps
+   84     | exp
+
+   85 match: MATCH LPAREN exp RPAREN LCBRACK match-params RCBRACK
+
+   86 match-params: match-param COMMA match-params
+   87             | match-param
+
+   88 match-param: pats RARROW block
+
+   89 pats: pat INCLUOR pats
+   90     | pat
+
+   91 exp: ID
+   92    | lit
+   93    | field_lookup
+   94    | array_index
+   95    | assign
+   96    | while
+   97    | loop
+   98    | if
+   99    | match
+  100    | fn-call
+  101    | box_new
+  102    | LPAREN exp RPAREN
+  103    | LPAREN RPAREN
+  104    | add
+  105    | sub
+  106    | mul
+  107    | div
+  108    | or
+  109    | and
+  110    | equal
+  111    | not-equal
+  112    | minus
+  113    | less
+  114    | greater
+  115    | less-equ
+  116    | greater-equ
+  117    | rem
+  118    | not
+  119    | address
+  120    | address-mut
+  121    | deref
+
+  122 add: exp ADD exp
+
+  123 sub: exp SUB exp
+
+  124 mul: exp MUL exp
+
+  125 div: exp DIV exp
+
+  126 or: exp LOGICOR exp
+
+  127 and: exp LOGICAND exp
+
+  128 equal: exp LOGICEQU exp
+
+  129 not-equal: exp NOTEQU exp
+
+  130 minus: SUB exp
+
+  131 less: exp LESS exp
+
+  132 greater: exp GREATER exp
+
+  133 less-equ: exp LESSEQU exp
+
+  134 greater-equ: exp GREATEREQU exp
+
+  135 rem: exp REMAINDER exp
+
+  136 not: EXCL exp
+
+  137 while: WHILE LPAREN exp RPAREN block
+
+  138 loop: LOOP block
+
+  139 if: IF LPAREN exp RPAREN block ELSE block
+  140   | IF LPAREN exp RPAREN block
+
+  141 lit: prim_lit
+  142    | comp_lit
+
+  143 prim_lit: T
+  144         | F
+  145         | LITCHAR
+  146         | LITSTR
+  147         | LITDEC
+
+  148 field_lookup: field DOT field
+
+  149 field: ID
+  150      | field_lookup
+  151      | array_index
+  152      | fn-call
+
+  153 array_index: ID LBRACK exp RBRACK
+  154            | fn-call LBRACK exp RBRACK
+  155            | array_index LBRACK exp RBRACK
+
+  156 fn-call: ID LPAREN exps RPAREN
+  157        | ID LPAREN RPAREN
+
+  158 assign: ID assign_type exp
+  159       | field_lookup assign_type exp
+  160       | array_index assign_type exp
+
+  161 assign_type: SUBEQU
+  162            | ADDEQU
+  163            | MULEQU
+  164            | DIVEQU
+  165            | REMAINEQU
+  166            | EQU
+
+  167 comp_lit: enum_lit
+  168         | struct_lit
+  169         | array_lit
+
+  170 enum_lit: ID QUALIFIER ID
+  171         | ID QUALIFIER ID LPAREN enum_exp RPAREN
+
+  172 enum_exp: exp COMMA enum_exp
+  173         | exp
+
+  174 struct_lit: ID LCBRACK id_binds RCBRACK
+
+  175 id_binds: id_bind COMMA id_binds
+  176         | id_bind
+
+  177 id_bind: ID COLON exp
+
+  178 array_lit: LBRACK enum_exp RBRACK
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+LITDEC (258) 43 46 62 147
+ID (259) 8 9 10 11 12 13 26 29 30 33 36 42 65 66 67 68 75 76 79 82
+    91 149 153 156 157 158 170 171 174 177
+LITSTR (260) 146
+LITCHAR (261) 145
+T (262) 143
+F (263) 144
+ABSTRACT (264)
+ALIGNOF (265)
+AS (266)
+BE (267)
+BOX (268) 41 50
+BREAK (269)
+CONST (270)
+CONTINUE (271)
+CRATE (272)
+DO (273)
+ELSE (274) 139
+EXTERN (275)
+FINAL (276)
+FN (277) 8 9 10 11 12 13
+FOR (278)
+IF (279) 139 140
+IMPL (280)
+IN (281)
+LET (282) 51 52 53 54
+LOOP (283) 138
+MACRO_RULES (284)
+MACRO (285)
+MATCH (286) 85
+MOD (287)
+MOVE (288)
+MUT (289) 40 67 68 70
+NEW (290) 50
+OFFSETOF (291)
+OVERRIDE (292)
+PRIV (293)
+PUB (294)
+PURE (295)
+REF (296) 66 67
+RETURN (297) 21 22
+SIZEOF (298)
+STATIC (299)
+SELF (300)
+STRUCT (301) 33
+SUPER (302)
+TRAIT (303)
+TYPEOF (304)
+TYPE (305)
+UNSAFE (306)
+UNSIZED (307)
+USE (308)
+VIRTUAL (309)
+WHERE (310)
+WHILE (311) 137
+YIELD (312)
+BOOL (313) 37 38
+U8 (314) 47
+U16 (315)
+U32 (316)
+U64 (317)
+I8 (318)
+I16 (319)
+I32 (320) 44 45
+I64 (321)
+F32 (322)
+F64 (323)
+USIZE (324)
+ISIZE (325)
+CHAR (326)
+STR (327)
+COLON (328) 25 36 52 53 82 177
+QUALIFIER (329) 50 75 76 170 171
+ELEMENTSELECT (330) 9 10 12 13
+RARROW (331) 88
+POUNDNOT (332)
+POUND (333)
+DOLLAR (334)
+LBRACK (335) 49 72 153 154 155 178
+RBRACK (336) 49 72 153 154 155 178
+LCBRACK (337) 14 15 26 33 79 85 174
+RCBRACK (338) 14 15 26 33 79 85 174
+COMMA (339) 23 27 31 34 73 77 80 83 86 172 175
+SEMICOLON (340) 19 20 21 22 38 45 46
+DIVEQU (341) 164
+REMAINEQU (342) 165
+REMAINDER (343) 135
+ANDEQU (344)
+LOGICAND (345) 127
+AND (346) 39 40 64 69 70
+OREQU (347)
+LOGICOR (348) 126
+INCLUOR (349) 89
+EXCOREQU (350)
+EXCLUSIVEOR (351)
+LOGICLEFTSHIFTEQU (352)
+LOGICLEFTSHIFT (353)
+LOGICRIGHTSHIFTEQU (354)
+LOGICRIGHTSHIFT (355)
+LESSEQU (356) 133
+GREATEREQU (357) 134
+LESS (358) 41 131
+GREATER (359) 41 132
+ADDEQU (360) 162
+SUBEQU (361) 161
+MULEQU (362) 163
+LOGICEQU (363) 128
+EQU (364) 53 54 166
+NOTEQU (365) 129
+EXCL (366) 10 13 136
+LPAREN (367) 8 9 10 11 12 13 30 48 50 57 76 85 102 103 137 139 140
+    156 157 171
+RPAREN (368) 8 9 10 11 12 13 30 48 50 57 76 85 102 103 137 139 140
+    156 157 171
+ADD (369) 122
+SUB (370) 62 123 130
+MUL (371) 71 124
+DIV (372) 125
+DDOT (373)
+TDOT (374)
+UNKNOWN (375)
+ENUM (376) 26
+STRING (377)
+DOT (378) 148
+NOT (379)
+UNDER (380) 63
+REM (381)
+
+
+Nonterminals, with rules where they appear
+
+$accept (127)
+    左： 0
+program (128)
+    左： 1, 右： 0
+crate (129)
+    左： 2, 右： 1
+items (130)
+    左： 3 4, 右： 2 3
+item (131)
+    左： 5 6 7, 右： 3 4
+funct (132)
+    左： 8 9 10 11 12 13, 右： 5
+block (133)
+    左： 14 15, 右： 8 9 10 11 12 13 88 137 138 139 140
+stmts (134)
+    左： 16 17 18, 右： 15 16
+stmt (135)
+    左： 19 20 21 22, 右： 16 17
+fn_params (136)
+    左： 23 24, 右： 8 9 10 23
+fn_param (137)
+    左： 25, 右： 23 24
+enum (138)
+    左： 26, 右： 6
+enum_ctor_defs (139)
+    左： 27 28, 右： 26 27
+enum_ctor_def (140)
+    左： 29 30, 右： 27 28
+ctor-types (141)
+    左： 31 32, 右： 30 31
+struct (142)
+    左： 33, 右： 7
+struct_field_defs (143)
+    左： 34 35, 右： 33 34
+struct_field_def (144)
+    左： 36, 右： 34 35
+type (145)
+    左： 37 38 39 40 41 42 43 44 45 46 47 48 49, 右： 9 12 25 31
+    32 36 38 39 40 41 45 46 49 52 53
+box_new (146)
+    左： 50, 右： 101
+let (147)
+    左： 51 52 53 54, 右： 20
+pat (148)
+    左： 55 56 57 58 59 60 61 62 63, 右： 25 51 52 53 54 64 73
+    74 77 78 82 89 90
+deref-pat (149)
+    左： 64, 右： 58
+name_bind (150)
+    左： 65 66 67 68, 右： 56
+address (151)
+    左： 69, 右： 119
+address-mut (152)
+    左： 70, 右： 120
+deref (153)
+    左： 71, 右： 121
+array_pat (154)
+    左： 72, 右： 59
+array_elems (155)
+    左： 73 74, 右： 72 73
+enum_pat (156)
+    左： 75 76, 右： 60
+enum-ctors (157)
+    左： 77 78, 右： 76 77
+struct_pat (158)
+    左： 79, 右： 61
+pat-fields (159)
+    左： 80 81, 右： 79 80
+pat-field (160)
+    左： 82, 右： 80 81
+exps (161)
+    左： 83 84, 右： 83 156
+match (162)
+    左： 85, 右： 99
+match-params (163)
+    左： 86 87, 右： 85 86
+match-param (164)
+    左： 88, 右： 86 87
+pats (165)
+    左： 89 90, 右： 88 89
+exp (166)
+    左： 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107
+    108 109 110 111 112 113 114 115 116 117 118 119 120 121, 右：
+    18 19 21 50 53 54 69 70 71 83 84 85 102 122 123 124 125 126 127
+    128 129 130 131 132 133 134 135 136 137 139 140 153 154 155 158
+    159 160 172 173 177
+add (167)
+    左： 122, 右： 104
+sub (168)
+    左： 123, 右： 105
+mul (169)
+    左： 124, 右： 106
+div (170)
+    左： 125, 右： 107
+or (171)
+    左： 126, 右： 108
+and (172)
+    左： 127, 右： 109
+equal (173)
+    左： 128, 右： 110
+not-equal (174)
+    左： 129, 右： 111
+minus (175)
+    左： 130, 右： 112
+less (176)
+    左： 131, 右： 113
+greater (177)
+    左： 132, 右： 114
+less-equ (178)
+    左： 133, 右： 115
+greater-equ (179)
+    左： 134, 右： 116
+rem (180)
+    左： 135, 右： 117
+not (181)
+    左： 136, 右： 118
+while (182)
+    左： 137, 右： 96
+loop (183)
+    左： 138, 右： 97
+if (184)
+    左： 139 140, 右： 98
+lit (185)
+    左： 141 142, 右： 92
+prim_lit (186)
+    左： 143 144 145 146 147, 右： 55 141
+field_lookup (187)
+    左： 148, 右： 93 150 159
+field (188)
+    左： 149 150 151 152, 右： 148
+array_index (189)
+    左： 153 154 155, 右： 94 151 155 160
+fn-call (190)
+    左： 156 157, 右： 100 152 154
+assign (191)
+    左： 158 159 160, 右： 95
+assign_type (192)
+    左： 161 162 163 164 165 166, 右： 158 159 160
+comp_lit (193)
+    左： 167 168 169, 右： 142
+enum_lit (194)
+    左： 170 171, 右： 167
+enum_exp (195)
+    左： 172 173, 右： 171 172 178
+struct_lit (196)
+    左： 174, 右： 168
+id_binds (197)
+    左： 175 176, 右： 174 175
+id_bind (198)
+    左： 177, 右： 175 176
+array_lit (199)
+    左： 178, 右： 169
+
+
+State 0
+
+    0 $accept: . program $end
+
+    FN      shift, and go to state 1
+    STRUCT  shift, and go to state 2
+    ENUM    shift, and go to state 3
+
+    program  转到状态 4
+    crate    转到状态 5
+    items    转到状态 6
+    item     转到状态 7
+    funct    转到状态 8
+    enum     转到状态 9
+    struct   转到状态 10
+
+
+State 1
+
+    8 funct: FN . ID LPAREN fn_params RPAREN block
+    9      | FN . ID LPAREN fn_params RPAREN ELEMENTSELECT type block
+   10      | FN . ID LPAREN fn_params RPAREN ELEMENTSELECT EXCL block
+   11      | FN . ID LPAREN RPAREN block
+   12      | FN . ID LPAREN RPAREN ELEMENTSELECT type block
+   13      | FN . ID LPAREN RPAREN ELEMENTSELECT EXCL block
+
+    ID  shift, and go to state 11
+
+
+State 2
+
+   33 struct: STRUCT . ID LCBRACK struct_field_defs RCBRACK
+
+    ID  shift, and go to state 12
+
+
+State 3
+
+   26 enum: ENUM . ID LCBRACK enum_ctor_defs RCBRACK
+
+    ID  shift, and go to state 13
+
+
+State 4
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 14
+
+
+State 5
+
+    1 program: crate .
+
+    $default  reduce using rule 1 (program)
+
+
+State 6
+
+    2 crate: items .
+
+    $default  reduce using rule 2 (crate)
+
+
+State 7
+
+    3 items: item . items
+    4      | item .
+
+    FN      shift, and go to state 1
+    STRUCT  shift, and go to state 2
+    ENUM    shift, and go to state 3
+
+    $default  reduce using rule 4 (items)
+
+    items   转到状态 15
+    item    转到状态 7
+    funct   转到状态 8
+    enum    转到状态 9
+    struct  转到状态 10
+
+
+State 8
+
+    5 item: funct .
+
+    $default  reduce using rule 5 (item)
+
+
+State 9
+
+    6 item: enum .
+
+    $default  reduce using rule 6 (item)
+
+
+State 10
+
+    7 item: struct .
+
+    $default  reduce using rule 7 (item)
+
+
+State 11
+
+    8 funct: FN ID . LPAREN fn_params RPAREN block
+    9      | FN ID . LPAREN fn_params RPAREN ELEMENTSELECT type block
+   10      | FN ID . LPAREN fn_params RPAREN ELEMENTSELECT EXCL block
+   11      | FN ID . LPAREN RPAREN block
+   12      | FN ID . LPAREN RPAREN ELEMENTSELECT type block
+   13      | FN ID . LPAREN RPAREN ELEMENTSELECT EXCL block
+
+    LPAREN  shift, and go to state 16
+
+
+State 12
+
+   33 struct: STRUCT ID . LCBRACK struct_field_defs RCBRACK
+
+    LCBRACK  shift, and go to state 17
+
+
+State 13
+
+   26 enum: ENUM ID . LCBRACK enum_ctor_defs RCBRACK
+
+    LCBRACK  shift, and go to state 18
+
+
+State 14
+
+    0 $accept: program $end .
+
+    $default  接受
+
+
+State 15
+
+    3 items: item items .
+
+    $default  reduce using rule 3 (items)
+
+
+State 16
+
+    8 funct: FN ID LPAREN . fn_params RPAREN block
+    9      | FN ID LPAREN . fn_params RPAREN ELEMENTSELECT type block
+   10      | FN ID LPAREN . fn_params RPAREN ELEMENTSELECT EXCL block
+   11      | FN ID LPAREN . RPAREN block
+   12      | FN ID LPAREN . RPAREN ELEMENTSELECT type block
+   13      | FN ID LPAREN . RPAREN ELEMENTSELECT EXCL block
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    RPAREN   shift, and go to state 30
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    fn_params   转到状态 33
+    fn_param    转到状态 34
+    pat         转到状态 35
+    deref-pat   转到状态 36
+    name_bind   转到状态 37
+    array_pat   转到状态 38
+    enum_pat    转到状态 39
+    struct_pat  转到状态 40
+    prim_lit    转到状态 41
+
+
+State 17
+
+   33 struct: STRUCT ID LCBRACK . struct_field_defs RCBRACK
+
+    ID  shift, and go to state 42
+
+    struct_field_defs  转到状态 43
+    struct_field_def   转到状态 44
+
+
+State 18
+
+   26 enum: ENUM ID LCBRACK . enum_ctor_defs RCBRACK
+
+    ID  shift, and go to state 45
+
+    enum_ctor_defs  转到状态 46
+    enum_ctor_def   转到状态 47
+
+
+State 19
+
+  147 prim_lit: LITDEC .
+
+    $default  reduce using rule 147 (prim_lit)
+
+
+State 20
+
+   65 name_bind: ID .
+   75 enum_pat: ID . QUALIFIER ID
+   76         | ID . QUALIFIER ID LPAREN enum-ctors RPAREN
+   79 struct_pat: ID . LCBRACK pat-fields RCBRACK
+
+    QUALIFIER  shift, and go to state 48
+    LCBRACK    shift, and go to state 49
+
+    $default  reduce using rule 65 (name_bind)
+
+
+State 21
+
+  146 prim_lit: LITSTR .
+
+    $default  reduce using rule 146 (prim_lit)
+
+
+State 22
+
+  145 prim_lit: LITCHAR .
+
+    $default  reduce using rule 145 (prim_lit)
+
+
+State 23
+
+  143 prim_lit: T .
+
+    $default  reduce using rule 143 (prim_lit)
+
+
+State 24
+
+  144 prim_lit: F .
+
+    $default  reduce using rule 144 (prim_lit)
+
+
+State 25
+
+   68 name_bind: MUT . ID
+
+    ID  shift, and go to state 50
+
+
+State 26
+
+   66 name_bind: REF . ID
+   67          | REF . MUT ID
+
+    ID   shift, and go to state 51
+    MUT  shift, and go to state 52
+
+
+State 27
+
+   72 array_pat: LBRACK . array_elems RBRACK
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat          转到状态 53
+    deref-pat    转到状态 36
+    name_bind    转到状态 37
+    array_pat    转到状态 38
+    array_elems  转到状态 54
+    enum_pat     转到状态 39
+    struct_pat   转到状态 40
+    prim_lit     转到状态 41
+
+
+State 28
+
+   64 deref-pat: AND . pat
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat         转到状态 55
+    deref-pat   转到状态 36
+    name_bind   转到状态 37
+    array_pat   转到状态 38
+    enum_pat    转到状态 39
+    struct_pat  转到状态 40
+    prim_lit    转到状态 41
+
+
+State 29
+
+   57 pat: LPAREN . RPAREN
+
+    RPAREN  shift, and go to state 56
+
+
+State 30
+
+   11 funct: FN ID LPAREN RPAREN . block
+   12      | FN ID LPAREN RPAREN . ELEMENTSELECT type block
+   13      | FN ID LPAREN RPAREN . ELEMENTSELECT EXCL block
+
+    ELEMENTSELECT  shift, and go to state 57
+    LCBRACK        shift, and go to state 58
+
+    block  转到状态 59
+
+
+State 31
+
+   62 pat: SUB . LITDEC
+
+    LITDEC  shift, and go to state 60
+
+
+State 32
+
+   63 pat: UNDER .
+
+    $default  reduce using rule 63 (pat)
+
+
+State 33
+
+    8 funct: FN ID LPAREN fn_params . RPAREN block
+    9      | FN ID LPAREN fn_params . RPAREN ELEMENTSELECT type block
+   10      | FN ID LPAREN fn_params . RPAREN ELEMENTSELECT EXCL block
+
+    RPAREN  shift, and go to state 61
+
+
+State 34
+
+   23 fn_params: fn_param . COMMA fn_params
+   24          | fn_param .
+
+    COMMA  shift, and go to state 62
+
+    $default  reduce using rule 24 (fn_params)
+
+
+State 35
+
+   25 fn_param: pat . COLON type
+
+    COLON  shift, and go to state 63
+
+
+State 36
+
+   58 pat: deref-pat .
+
+    $default  reduce using rule 58 (pat)
+
+
+State 37
+
+   56 pat: name_bind .
+
+    $default  reduce using rule 56 (pat)
+
+
+State 38
+
+   59 pat: array_pat .
+
+    $default  reduce using rule 59 (pat)
+
+
+State 39
+
+   60 pat: enum_pat .
+
+    $default  reduce using rule 60 (pat)
+
+
+State 40
+
+   61 pat: struct_pat .
+
+    $default  reduce using rule 61 (pat)
+
+
+State 41
+
+   55 pat: prim_lit .
+
+    $default  reduce using rule 55 (pat)
+
+
+State 42
+
+   36 struct_field_def: ID . COLON type
+
+    COLON  shift, and go to state 64
+
+
+State 43
+
+   33 struct: STRUCT ID LCBRACK struct_field_defs . RCBRACK
+
+    RCBRACK  shift, and go to state 65
+
+
+State 44
+
+   34 struct_field_defs: struct_field_def . COMMA struct_field_defs
+   35                  | struct_field_def .
+
+    COMMA  shift, and go to state 66
+
+    $default  reduce using rule 35 (struct_field_defs)
+
+
+State 45
+
+   29 enum_ctor_def: ID .
+   30              | ID . LPAREN ctor-types RPAREN
+
+    LPAREN  shift, and go to state 67
+
+    $default  reduce using rule 29 (enum_ctor_def)
+
+
+State 46
+
+   26 enum: ENUM ID LCBRACK enum_ctor_defs . RCBRACK
+
+    RCBRACK  shift, and go to state 68
+
+
+State 47
+
+   27 enum_ctor_defs: enum_ctor_def . COMMA enum_ctor_defs
+   28               | enum_ctor_def .
+
+    COMMA  shift, and go to state 69
+
+    $default  reduce using rule 28 (enum_ctor_defs)
+
+
+State 48
+
+   75 enum_pat: ID QUALIFIER . ID
+   76         | ID QUALIFIER . ID LPAREN enum-ctors RPAREN
+
+    ID  shift, and go to state 70
+
+
+State 49
+
+   79 struct_pat: ID LCBRACK . pat-fields RCBRACK
+
+    ID  shift, and go to state 71
+
+    pat-fields  转到状态 72
+    pat-field   转到状态 73
+
+
+State 50
+
+   68 name_bind: MUT ID .
+
+    $default  reduce using rule 68 (name_bind)
+
+
+State 51
+
+   66 name_bind: REF ID .
+
+    $default  reduce using rule 66 (name_bind)
+
+
+State 52
+
+   67 name_bind: REF MUT . ID
+
+    ID  shift, and go to state 74
+
+
+State 53
+
+   73 array_elems: pat . COMMA array_elems
+   74            | pat .
+
+    COMMA  shift, and go to state 75
+
+    $default  reduce using rule 74 (array_elems)
+
+
+State 54
+
+   72 array_pat: LBRACK array_elems . RBRACK
+
+    RBRACK  shift, and go to state 76
+
+
+State 55
+
+   64 deref-pat: AND pat .
+
+    $default  reduce using rule 64 (deref-pat)
+
+
+State 56
+
+   57 pat: LPAREN RPAREN .
+
+    $default  reduce using rule 57 (pat)
+
+
+State 57
+
+   12 funct: FN ID LPAREN RPAREN ELEMENTSELECT . type block
+   13      | FN ID LPAREN RPAREN ELEMENTSELECT . EXCL block
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    EXCL    shift, and go to state 85
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 87
+
+
+State 58
+
+   14 block: LCBRACK . RCBRACK
+   15      | LCBRACK . stmts RCBRACK
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LET      shift, and go to state 91
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    RETURN   shift, and go to state 94
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    RCBRACK  shift, and go to state 97
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    stmts         转到状态 103
+    stmt          转到状态 104
+    box_new       转到状态 105
+    let           转到状态 106
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 111
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 59
+
+   11 funct: FN ID LPAREN RPAREN block .
+
+    $default  reduce using rule 11 (funct)
+
+
+State 60
+
+   62 pat: SUB LITDEC .
+
+    $default  reduce using rule 62 (pat)
+
+
+State 61
+
+    8 funct: FN ID LPAREN fn_params RPAREN . block
+    9      | FN ID LPAREN fn_params RPAREN . ELEMENTSELECT type block
+   10      | FN ID LPAREN fn_params RPAREN . ELEMENTSELECT EXCL block
+
+    ELEMENTSELECT  shift, and go to state 141
+    LCBRACK        shift, and go to state 58
+
+    block  转到状态 142
+
+
+State 62
+
+   23 fn_params: fn_param COMMA . fn_params
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    fn_params   转到状态 143
+    fn_param    转到状态 34
+    pat         转到状态 35
+    deref-pat   转到状态 36
+    name_bind   转到状态 37
+    array_pat   转到状态 38
+    enum_pat    转到状态 39
+    struct_pat  转到状态 40
+    prim_lit    转到状态 41
+
+
+State 63
+
+   25 fn_param: pat COLON . type
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 144
+
+
+State 64
+
+   36 struct_field_def: ID COLON . type
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 145
+
+
+State 65
+
+   33 struct: STRUCT ID LCBRACK struct_field_defs RCBRACK .
+
+    $default  reduce using rule 33 (struct)
+
+
+State 66
+
+   34 struct_field_defs: struct_field_def COMMA . struct_field_defs
+
+    ID  shift, and go to state 42
+
+    struct_field_defs  转到状态 146
+    struct_field_def   转到状态 44
+
+
+State 67
+
+   30 enum_ctor_def: ID LPAREN . ctor-types RPAREN
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    ctor-types  转到状态 147
+    type        转到状态 148
+
+
+State 68
+
+   26 enum: ENUM ID LCBRACK enum_ctor_defs RCBRACK .
+
+    $default  reduce using rule 26 (enum)
+
+
+State 69
+
+   27 enum_ctor_defs: enum_ctor_def COMMA . enum_ctor_defs
+
+    ID  shift, and go to state 45
+
+    enum_ctor_defs  转到状态 149
+    enum_ctor_def   转到状态 47
+
+
+State 70
+
+   75 enum_pat: ID QUALIFIER ID .
+   76         | ID QUALIFIER ID . LPAREN enum-ctors RPAREN
+
+    LPAREN  shift, and go to state 150
+
+    $default  reduce using rule 75 (enum_pat)
+
+
+State 71
+
+   82 pat-field: ID . COLON pat
+
+    COLON  shift, and go to state 151
+
+
+State 72
+
+   79 struct_pat: ID LCBRACK pat-fields . RCBRACK
+
+    RCBRACK  shift, and go to state 152
+
+
+State 73
+
+   80 pat-fields: pat-field . COMMA pat-fields
+   81           | pat-field .
+
+    COMMA  shift, and go to state 153
+
+    $default  reduce using rule 81 (pat-fields)
+
+
+State 74
+
+   67 name_bind: REF MUT ID .
+
+    $default  reduce using rule 67 (name_bind)
+
+
+State 75
+
+   73 array_elems: pat COMMA . array_elems
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat          转到状态 53
+    deref-pat    转到状态 36
+    name_bind    转到状态 37
+    array_pat    转到状态 38
+    array_elems  转到状态 154
+    enum_pat     转到状态 39
+    struct_pat   转到状态 40
+    prim_lit     转到状态 41
+
+
+State 76
+
+   72 array_pat: LBRACK array_elems RBRACK .
+
+    $default  reduce using rule 72 (array_pat)
+
+
+State 77
+
+   43 type: LITDEC .
+
+    $default  reduce using rule 43 (type)
+
+
+State 78
+
+   42 type: ID .
+
+    $default  reduce using rule 42 (type)
+
+
+State 79
+
+   41 type: BOX . LESS type GREATER
+
+    LESS  shift, and go to state 155
+
+
+State 80
+
+   37 type: BOOL .
+   38     | BOOL . SEMICOLON type
+
+    SEMICOLON  shift, and go to state 156
+
+    SEMICOLON  [reduce using rule 37 (type)]
+    $default   reduce using rule 37 (type)
+
+
+State 81
+
+   47 type: U8 .
+
+    $default  reduce using rule 47 (type)
+
+
+State 82
+
+   44 type: I32 .
+   45     | I32 . SEMICOLON type
+
+    SEMICOLON  shift, and go to state 157
+
+    SEMICOLON  [reduce using rule 44 (type)]
+    $default   reduce using rule 44 (type)
+
+
+State 83
+
+   49 type: LBRACK . type RBRACK
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 158
+
+
+State 84
+
+   39 type: AND . type
+   40     | AND . MUT type
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    MUT     shift, and go to state 159
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 160
+
+
+State 85
+
+   13 funct: FN ID LPAREN RPAREN ELEMENTSELECT EXCL . block
+
+    LCBRACK  shift, and go to state 58
+
+    block  转到状态 161
+
+
+State 86
+
+   48 type: LPAREN . RPAREN
+
+    RPAREN  shift, and go to state 162
+
+
+State 87
+
+   12 funct: FN ID LPAREN RPAREN ELEMENTSELECT type . block
+   46 type: type . SEMICOLON LITDEC
+
+    LCBRACK    shift, and go to state 58
+    SEMICOLON  shift, and go to state 163
+
+    block  转到状态 164
+
+
+State 88
+
+   91 exp: ID .
+  149 field: ID .
+  153 array_index: ID . LBRACK exp RBRACK
+  156 fn-call: ID . LPAREN exps RPAREN
+  157        | ID . LPAREN RPAREN
+  158 assign: ID . assign_type exp
+  170 enum_lit: ID . QUALIFIER ID
+  171         | ID . QUALIFIER ID LPAREN enum_exp RPAREN
+  174 struct_lit: ID . LCBRACK id_binds RCBRACK
+
+    QUALIFIER  shift, and go to state 165
+    LBRACK     shift, and go to state 166
+    LCBRACK    shift, and go to state 167
+    DIVEQU     shift, and go to state 168
+    REMAINEQU  shift, and go to state 169
+    ADDEQU     shift, and go to state 170
+    SUBEQU     shift, and go to state 171
+    MULEQU     shift, and go to state 172
+    EQU        shift, and go to state 173
+    LPAREN     shift, and go to state 174
+
+    DOT       reduce using rule 149 (field)
+    $default  reduce using rule 91 (exp)
+
+    assign_type  转到状态 175
+
+
+State 89
+
+   50 box_new: BOX . QUALIFIER NEW LPAREN exp RPAREN
+
+    QUALIFIER  shift, and go to state 176
+
+
+State 90
+
+  139 if: IF . LPAREN exp RPAREN block ELSE block
+  140   | IF . LPAREN exp RPAREN block
+
+    LPAREN  shift, and go to state 177
+
+
+State 91
+
+   51 let: LET . pat
+   52    | LET . pat COLON type
+   53    | LET . pat COLON type EQU exp
+   54    | LET . pat EQU exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat         转到状态 178
+    deref-pat   转到状态 36
+    name_bind   转到状态 37
+    array_pat   转到状态 38
+    enum_pat    转到状态 39
+    struct_pat  转到状态 40
+    prim_lit    转到状态 41
+
+
+State 92
+
+  138 loop: LOOP . block
+
+    LCBRACK  shift, and go to state 58
+
+    block  转到状态 179
+
+
+State 93
+
+   85 match: MATCH . LPAREN exp RPAREN LCBRACK match-params RCBRACK
+
+    LPAREN  shift, and go to state 180
+
+
+State 94
+
+   21 stmt: RETURN . exp SEMICOLON
+   22     | RETURN . SEMICOLON
+
+    LITDEC     shift, and go to state 19
+    ID         shift, and go to state 88
+    LITSTR     shift, and go to state 21
+    LITCHAR    shift, and go to state 22
+    T          shift, and go to state 23
+    F          shift, and go to state 24
+    BOX        shift, and go to state 89
+    IF         shift, and go to state 90
+    LOOP       shift, and go to state 92
+    MATCH      shift, and go to state 93
+    WHILE      shift, and go to state 95
+    LBRACK     shift, and go to state 96
+    SEMICOLON  shift, and go to state 181
+    AND        shift, and go to state 98
+    EXCL       shift, and go to state 99
+    LPAREN     shift, and go to state 100
+    SUB        shift, and go to state 101
+    MUL        shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 182
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 95
+
+  137 while: WHILE . LPAREN exp RPAREN block
+
+    LPAREN  shift, and go to state 183
+
+
+State 96
+
+  178 array_lit: LBRACK . enum_exp RBRACK
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 184
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    enum_exp      转到状态 185
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 97
+
+   14 block: LCBRACK RCBRACK .
+
+    $default  reduce using rule 14 (block)
+
+
+State 98
+
+   69 address: AND . exp
+   70 address-mut: AND . MUT exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    MUT      shift, and go to state 186
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 187
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 99
+
+  136 not: EXCL . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 188
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 100
+
+  102 exp: LPAREN . exp RPAREN
+  103    | LPAREN . RPAREN
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    RPAREN   shift, and go to state 189
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 190
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 101
+
+  130 minus: SUB . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 191
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 102
+
+   71 deref: MUL . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 192
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 103
+
+   15 block: LCBRACK stmts . RCBRACK
+
+    RCBRACK  shift, and go to state 193
+
+
+State 104
+
+   16 stmts: stmt . stmts
+   17      | stmt .
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LET      shift, and go to state 91
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    RETURN   shift, and go to state 94
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    $default  reduce using rule 17 (stmts)
+
+    stmts         转到状态 194
+    stmt          转到状态 104
+    box_new       转到状态 105
+    let           转到状态 106
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 111
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 105
+
+  101 exp: box_new .
+
+    $default  reduce using rule 101 (exp)
+
+
+State 106
+
+   20 stmt: let . SEMICOLON
+
+    SEMICOLON  shift, and go to state 195
+
+
+State 107
+
+  119 exp: address .
+
+    $default  reduce using rule 119 (exp)
+
+
+State 108
+
+  120 exp: address-mut .
+
+    $default  reduce using rule 120 (exp)
+
+
+State 109
+
+  121 exp: deref .
+
+    $default  reduce using rule 121 (exp)
+
+
+State 110
+
+   99 exp: match .
+
+    $default  reduce using rule 99 (exp)
+
+
+State 111
+
+   18 stmts: exp .
+   19 stmt: exp . SEMICOLON
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    SEMICOLON   shift, and go to state 196
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    $default  reduce using rule 18 (stmts)
+
+
+State 112
+
+  104 exp: add .
+
+    $default  reduce using rule 104 (exp)
+
+
+State 113
+
+  105 exp: sub .
+
+    $default  reduce using rule 105 (exp)
+
+
+State 114
+
+  106 exp: mul .
+
+    $default  reduce using rule 106 (exp)
+
+
+State 115
+
+  107 exp: div .
+
+    $default  reduce using rule 107 (exp)
+
+
+State 116
+
+  108 exp: or .
+
+    $default  reduce using rule 108 (exp)
+
+
+State 117
+
+  109 exp: and .
+
+    $default  reduce using rule 109 (exp)
+
+
+State 118
+
+  110 exp: equal .
+
+    $default  reduce using rule 110 (exp)
+
+
+State 119
+
+  111 exp: not-equal .
+
+    $default  reduce using rule 111 (exp)
+
+
+State 120
+
+  112 exp: minus .
+
+    $default  reduce using rule 112 (exp)
+
+
+State 121
+
+  113 exp: less .
+
+    $default  reduce using rule 113 (exp)
+
+
+State 122
+
+  114 exp: greater .
+
+    $default  reduce using rule 114 (exp)
+
+
+State 123
+
+  115 exp: less-equ .
+
+    $default  reduce using rule 115 (exp)
+
+
+State 124
+
+  116 exp: greater-equ .
+
+    $default  reduce using rule 116 (exp)
+
+
+State 125
+
+  117 exp: rem .
+
+    $default  reduce using rule 117 (exp)
+
+
+State 126
+
+  118 exp: not .
+
+    $default  reduce using rule 118 (exp)
+
+
+State 127
+
+   96 exp: while .
+
+    $default  reduce using rule 96 (exp)
+
+
+State 128
+
+   97 exp: loop .
+
+    $default  reduce using rule 97 (exp)
+
+
+State 129
+
+   98 exp: if .
+
+    $default  reduce using rule 98 (exp)
+
+
+State 130
+
+   92 exp: lit .
+
+    $default  reduce using rule 92 (exp)
+
+
+State 131
+
+  141 lit: prim_lit .
+
+    $default  reduce using rule 141 (lit)
+
+
+State 132
+
+   93 exp: field_lookup .
+  150 field: field_lookup .
+  159 assign: field_lookup . assign_type exp
+
+    DIVEQU     shift, and go to state 168
+    REMAINEQU  shift, and go to state 169
+    ADDEQU     shift, and go to state 170
+    SUBEQU     shift, and go to state 171
+    MULEQU     shift, and go to state 172
+    EQU        shift, and go to state 173
+
+    DOT       reduce using rule 150 (field)
+    $default  reduce using rule 93 (exp)
+
+    assign_type  转到状态 210
+
+
+State 133
+
+  148 field_lookup: field . DOT field
+
+    DOT  shift, and go to state 211
+
+
+State 134
+
+   94 exp: array_index .
+  151 field: array_index .
+  155 array_index: array_index . LBRACK exp RBRACK
+  160 assign: array_index . assign_type exp
+
+    LBRACK     shift, and go to state 212
+    DIVEQU     shift, and go to state 168
+    REMAINEQU  shift, and go to state 169
+    ADDEQU     shift, and go to state 170
+    SUBEQU     shift, and go to state 171
+    MULEQU     shift, and go to state 172
+    EQU        shift, and go to state 173
+
+    DOT       reduce using rule 151 (field)
+    $default  reduce using rule 94 (exp)
+
+    assign_type  转到状态 213
+
+
+State 135
+
+  100 exp: fn-call .
+  152 field: fn-call .
+  154 array_index: fn-call . LBRACK exp RBRACK
+
+    LBRACK  shift, and go to state 214
+
+    DOT       reduce using rule 152 (field)
+    $default  reduce using rule 100 (exp)
+
+
+State 136
+
+   95 exp: assign .
+
+    $default  reduce using rule 95 (exp)
+
+
+State 137
+
+  142 lit: comp_lit .
+
+    $default  reduce using rule 142 (lit)
+
+
+State 138
+
+  167 comp_lit: enum_lit .
+
+    $default  reduce using rule 167 (comp_lit)
+
+
+State 139
+
+  168 comp_lit: struct_lit .
+
+    $default  reduce using rule 168 (comp_lit)
+
+
+State 140
+
+  169 comp_lit: array_lit .
+
+    $default  reduce using rule 169 (comp_lit)
+
+
+State 141
+
+    9 funct: FN ID LPAREN fn_params RPAREN ELEMENTSELECT . type block
+   10      | FN ID LPAREN fn_params RPAREN ELEMENTSELECT . EXCL block
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    EXCL    shift, and go to state 215
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 216
+
+
+State 142
+
+    8 funct: FN ID LPAREN fn_params RPAREN block .
+
+    $default  reduce using rule 8 (funct)
+
+
+State 143
+
+   23 fn_params: fn_param COMMA fn_params .
+
+    $default  reduce using rule 23 (fn_params)
+
+
+State 144
+
+   25 fn_param: pat COLON type .
+   46 type: type . SEMICOLON LITDEC
+
+    SEMICOLON  shift, and go to state 163
+
+    $default  reduce using rule 25 (fn_param)
+
+
+State 145
+
+   36 struct_field_def: ID COLON type .
+   46 type: type . SEMICOLON LITDEC
+
+    SEMICOLON  shift, and go to state 163
+
+    $default  reduce using rule 36 (struct_field_def)
+
+
+State 146
+
+   34 struct_field_defs: struct_field_def COMMA struct_field_defs .
+
+    $default  reduce using rule 34 (struct_field_defs)
+
+
+State 147
+
+   30 enum_ctor_def: ID LPAREN ctor-types . RPAREN
+
+    RPAREN  shift, and go to state 217
+
+
+State 148
+
+   31 ctor-types: type . COMMA ctor-types
+   32           | type .
+   46 type: type . SEMICOLON LITDEC
+
+    COMMA      shift, and go to state 218
+    SEMICOLON  shift, and go to state 163
+
+    $default  reduce using rule 32 (ctor-types)
+
+
+State 149
+
+   27 enum_ctor_defs: enum_ctor_def COMMA enum_ctor_defs .
+
+    $default  reduce using rule 27 (enum_ctor_defs)
+
+
+State 150
+
+   76 enum_pat: ID QUALIFIER ID LPAREN . enum-ctors RPAREN
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat         转到状态 219
+    deref-pat   转到状态 36
+    name_bind   转到状态 37
+    array_pat   转到状态 38
+    enum_pat    转到状态 39
+    enum-ctors  转到状态 220
+    struct_pat  转到状态 40
+    prim_lit    转到状态 41
+
+
+State 151
+
+   82 pat-field: ID COLON . pat
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat         转到状态 221
+    deref-pat   转到状态 36
+    name_bind   转到状态 37
+    array_pat   转到状态 38
+    enum_pat    转到状态 39
+    struct_pat  转到状态 40
+    prim_lit    转到状态 41
+
+
+State 152
+
+   79 struct_pat: ID LCBRACK pat-fields RCBRACK .
+
+    $default  reduce using rule 79 (struct_pat)
+
+
+State 153
+
+   80 pat-fields: pat-field COMMA . pat-fields
+
+    ID  shift, and go to state 71
+
+    pat-fields  转到状态 222
+    pat-field   转到状态 73
+
+
+State 154
+
+   73 array_elems: pat COMMA array_elems .
+
+    $default  reduce using rule 73 (array_elems)
+
+
+State 155
+
+   41 type: BOX LESS . type GREATER
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 223
+
+
+State 156
+
+   38 type: BOOL SEMICOLON . type
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 224
+
+
+State 157
+
+   45 type: I32 SEMICOLON . type
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 225
+
+
+State 158
+
+   46 type: type . SEMICOLON LITDEC
+   49     | LBRACK type . RBRACK
+
+    RBRACK     shift, and go to state 226
+    SEMICOLON  shift, and go to state 163
+
+
+State 159
+
+   40 type: AND MUT . type
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 227
+
+
+State 160
+
+   39 type: AND type .
+   46     | type . SEMICOLON LITDEC
+
+    SEMICOLON  shift, and go to state 163
+
+    SEMICOLON  [reduce using rule 39 (type)]
+    $default   reduce using rule 39 (type)
+
+
+State 161
+
+   13 funct: FN ID LPAREN RPAREN ELEMENTSELECT EXCL block .
+
+    $default  reduce using rule 13 (funct)
+
+
+State 162
+
+   48 type: LPAREN RPAREN .
+
+    $default  reduce using rule 48 (type)
+
+
+State 163
+
+   46 type: type SEMICOLON . LITDEC
+
+    LITDEC  shift, and go to state 228
+
+
+State 164
+
+   12 funct: FN ID LPAREN RPAREN ELEMENTSELECT type block .
+
+    $default  reduce using rule 12 (funct)
+
+
+State 165
+
+  170 enum_lit: ID QUALIFIER . ID
+  171         | ID QUALIFIER . ID LPAREN enum_exp RPAREN
+
+    ID  shift, and go to state 229
+
+
+State 166
+
+  153 array_index: ID LBRACK . exp RBRACK
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 230
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 167
+
+  174 struct_lit: ID LCBRACK . id_binds RCBRACK
+
+    ID  shift, and go to state 231
+
+    id_binds  转到状态 232
+    id_bind   转到状态 233
+
+
+State 168
+
+  164 assign_type: DIVEQU .
+
+    $default  reduce using rule 164 (assign_type)
+
+
+State 169
+
+  165 assign_type: REMAINEQU .
+
+    $default  reduce using rule 165 (assign_type)
+
+
+State 170
+
+  162 assign_type: ADDEQU .
+
+    $default  reduce using rule 162 (assign_type)
+
+
+State 171
+
+  161 assign_type: SUBEQU .
+
+    $default  reduce using rule 161 (assign_type)
+
+
+State 172
+
+  163 assign_type: MULEQU .
+
+    $default  reduce using rule 163 (assign_type)
+
+
+State 173
+
+  166 assign_type: EQU .
+
+    $default  reduce using rule 166 (assign_type)
+
+
+State 174
+
+  156 fn-call: ID LPAREN . exps RPAREN
+  157        | ID LPAREN . RPAREN
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    RPAREN   shift, and go to state 234
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    exps          转到状态 235
+    match         转到状态 110
+    exp           转到状态 236
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 175
+
+  158 assign: ID assign_type . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 237
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 176
+
+   50 box_new: BOX QUALIFIER . NEW LPAREN exp RPAREN
+
+    NEW  shift, and go to state 238
+
+
+State 177
+
+  139 if: IF LPAREN . exp RPAREN block ELSE block
+  140   | IF LPAREN . exp RPAREN block
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 239
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 178
+
+   51 let: LET pat .
+   52    | LET pat . COLON type
+   53    | LET pat . COLON type EQU exp
+   54    | LET pat . EQU exp
+
+    COLON  shift, and go to state 240
+    EQU    shift, and go to state 241
+
+    $default  reduce using rule 51 (let)
+
+
+State 179
+
+  138 loop: LOOP block .
+
+    $default  reduce using rule 138 (loop)
+
+
+State 180
+
+   85 match: MATCH LPAREN . exp RPAREN LCBRACK match-params RCBRACK
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 242
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 181
+
+   22 stmt: RETURN SEMICOLON .
+
+    $default  reduce using rule 22 (stmt)
+
+
+State 182
+
+   21 stmt: RETURN exp . SEMICOLON
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    SEMICOLON   shift, and go to state 243
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+
+State 183
+
+  137 while: WHILE LPAREN . exp RPAREN block
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 244
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 184
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  172 enum_exp: exp . COMMA enum_exp
+  173         | exp .
+
+    COMMA       shift, and go to state 245
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    $default  reduce using rule 173 (enum_exp)
+
+
+State 185
+
+  178 array_lit: LBRACK enum_exp . RBRACK
+
+    RBRACK  shift, and go to state 246
+
+
+State 186
+
+   70 address-mut: AND MUT . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 247
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 187
+
+   69 address: AND exp .
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+
+    REMAINDER  [reduce using rule 69 (address)]
+    $default   reduce using rule 69 (address)
+
+
+State 188
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  136 not: EXCL exp .
+
+    REMAINDER  shift, and go to state 197
+
+    REMAINDER  [reduce using rule 136 (not)]
+    $default   reduce using rule 136 (not)
+
+
+State 189
+
+  103 exp: LPAREN RPAREN .
+
+    $default  reduce using rule 103 (exp)
+
+
+State 190
+
+  102 exp: LPAREN exp . RPAREN
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    RPAREN      shift, and go to state 248
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+
+State 191
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  130 minus: SUB exp .
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+    MUL        shift, and go to state 208
+    DIV        shift, and go to state 209
+
+    REMAINDER  [reduce using rule 130 (minus)]
+    $default   reduce using rule 130 (minus)
+
+
+State 192
+
+   71 deref: MUL exp .
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+
+    REMAINDER  [reduce using rule 71 (deref)]
+    $default   reduce using rule 71 (deref)
+
+
+State 193
+
+   15 block: LCBRACK stmts RCBRACK .
+
+    $default  reduce using rule 15 (block)
+
+
+State 194
+
+   16 stmts: stmt stmts .
+
+    $default  reduce using rule 16 (stmts)
+
+
+State 195
+
+   20 stmt: let SEMICOLON .
+
+    $default  reduce using rule 20 (stmt)
+
+
+State 196
+
+   19 stmt: exp SEMICOLON .
+
+    $default  reduce using rule 19 (stmt)
+
+
+State 197
+
+  135 rem: exp REMAINDER . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 249
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 198
+
+  127 and: exp LOGICAND . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 250
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 199
+
+  126 or: exp LOGICOR . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 251
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 200
+
+  133 less-equ: exp LESSEQU . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 252
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 201
+
+  134 greater-equ: exp GREATEREQU . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 253
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 202
+
+  131 less: exp LESS . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 254
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 203
+
+  132 greater: exp GREATER . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 255
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 204
+
+  128 equal: exp LOGICEQU . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 256
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 205
+
+  129 not-equal: exp NOTEQU . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 257
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 206
+
+  122 add: exp ADD . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 258
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 207
+
+  123 sub: exp SUB . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 259
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 208
+
+  124 mul: exp MUL . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 260
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 209
+
+  125 div: exp DIV . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 261
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 210
+
+  159 assign: field_lookup assign_type . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 262
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 211
+
+  148 field_lookup: field DOT . field
+
+    ID  shift, and go to state 263
+
+    field_lookup  转到状态 264
+    field         转到状态 265
+    array_index   转到状态 266
+    fn-call       转到状态 267
+
+
+State 212
+
+  155 array_index: array_index LBRACK . exp RBRACK
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 268
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 213
+
+  160 assign: array_index assign_type . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 269
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 214
+
+  154 array_index: fn-call LBRACK . exp RBRACK
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 270
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 215
+
+   10 funct: FN ID LPAREN fn_params RPAREN ELEMENTSELECT EXCL . block
+
+    LCBRACK  shift, and go to state 58
+
+    block  转到状态 271
+
+
+State 216
+
+    9 funct: FN ID LPAREN fn_params RPAREN ELEMENTSELECT type . block
+   46 type: type . SEMICOLON LITDEC
+
+    LCBRACK    shift, and go to state 58
+    SEMICOLON  shift, and go to state 163
+
+    block  转到状态 272
+
+
+State 217
+
+   30 enum_ctor_def: ID LPAREN ctor-types RPAREN .
+
+    $default  reduce using rule 30 (enum_ctor_def)
+
+
+State 218
+
+   31 ctor-types: type COMMA . ctor-types
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    ctor-types  转到状态 273
+    type        转到状态 148
+
+
+State 219
+
+   77 enum-ctors: pat . COMMA enum-ctors
+   78           | pat .
+
+    COMMA  shift, and go to state 274
+
+    $default  reduce using rule 78 (enum-ctors)
+
+
+State 220
+
+   76 enum_pat: ID QUALIFIER ID LPAREN enum-ctors . RPAREN
+
+    RPAREN  shift, and go to state 275
+
+
+State 221
+
+   82 pat-field: ID COLON pat .
+
+    $default  reduce using rule 82 (pat-field)
+
+
+State 222
+
+   80 pat-fields: pat-field COMMA pat-fields .
+
+    $default  reduce using rule 80 (pat-fields)
+
+
+State 223
+
+   41 type: BOX LESS type . GREATER
+   46     | type . SEMICOLON LITDEC
+
+    SEMICOLON  shift, and go to state 163
+    GREATER    shift, and go to state 276
+
+
+State 224
+
+   38 type: BOOL SEMICOLON type .
+   46     | type . SEMICOLON LITDEC
+
+    SEMICOLON  shift, and go to state 163
+
+    SEMICOLON  [reduce using rule 38 (type)]
+    $default   reduce using rule 38 (type)
+
+
+State 225
+
+   45 type: I32 SEMICOLON type .
+   46     | type . SEMICOLON LITDEC
+
+    SEMICOLON  shift, and go to state 163
+
+    SEMICOLON  [reduce using rule 45 (type)]
+    $default   reduce using rule 45 (type)
+
+
+State 226
+
+   49 type: LBRACK type RBRACK .
+
+    $default  reduce using rule 49 (type)
+
+
+State 227
+
+   40 type: AND MUT type .
+   46     | type . SEMICOLON LITDEC
+
+    SEMICOLON  shift, and go to state 163
+
+    SEMICOLON  [reduce using rule 40 (type)]
+    $default   reduce using rule 40 (type)
+
+
+State 228
+
+   46 type: type SEMICOLON LITDEC .
+
+    $default  reduce using rule 46 (type)
+
+
+State 229
+
+  170 enum_lit: ID QUALIFIER ID .
+  171         | ID QUALIFIER ID . LPAREN enum_exp RPAREN
+
+    LPAREN  shift, and go to state 277
+
+    $default  reduce using rule 170 (enum_lit)
+
+
+State 230
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  153 array_index: ID LBRACK exp . RBRACK
+
+    RBRACK      shift, and go to state 278
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+
+State 231
+
+  177 id_bind: ID . COLON exp
+
+    COLON  shift, and go to state 279
+
+
+State 232
+
+  174 struct_lit: ID LCBRACK id_binds . RCBRACK
+
+    RCBRACK  shift, and go to state 280
+
+
+State 233
+
+  175 id_binds: id_bind . COMMA id_binds
+  176         | id_bind .
+
+    COMMA  shift, and go to state 281
+
+    $default  reduce using rule 176 (id_binds)
+
+
+State 234
+
+  157 fn-call: ID LPAREN RPAREN .
+
+    $default  reduce using rule 157 (fn-call)
+
+
+State 235
+
+  156 fn-call: ID LPAREN exps . RPAREN
+
+    RPAREN  shift, and go to state 282
+
+
+State 236
+
+   83 exps: exp . COMMA exps
+   84     | exp .
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    COMMA       shift, and go to state 283
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    $default  reduce using rule 84 (exps)
+
+
+State 237
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  158 assign: ID assign_type exp .
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    REMAINDER   [reduce using rule 158 (assign)]
+    LOGICAND    [reduce using rule 158 (assign)]
+    LOGICOR     [reduce using rule 158 (assign)]
+    LESSEQU     [reduce using rule 158 (assign)]
+    GREATEREQU  [reduce using rule 158 (assign)]
+    LESS        [reduce using rule 158 (assign)]
+    GREATER     [reduce using rule 158 (assign)]
+    LOGICEQU    [reduce using rule 158 (assign)]
+    NOTEQU      [reduce using rule 158 (assign)]
+    ADD         [reduce using rule 158 (assign)]
+    SUB         [reduce using rule 158 (assign)]
+    MUL         [reduce using rule 158 (assign)]
+    DIV         [reduce using rule 158 (assign)]
+    $default    reduce using rule 158 (assign)
+
+
+State 238
+
+   50 box_new: BOX QUALIFIER NEW . LPAREN exp RPAREN
+
+    LPAREN  shift, and go to state 284
+
+
+State 239
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  139 if: IF LPAREN exp . RPAREN block ELSE block
+  140   | IF LPAREN exp . RPAREN block
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    RPAREN      shift, and go to state 285
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+
+State 240
+
+   52 let: LET pat COLON . type
+   53    | LET pat COLON . type EQU exp
+
+    LITDEC  shift, and go to state 77
+    ID      shift, and go to state 78
+    BOX     shift, and go to state 79
+    BOOL    shift, and go to state 80
+    U8      shift, and go to state 81
+    I32     shift, and go to state 82
+    LBRACK  shift, and go to state 83
+    AND     shift, and go to state 84
+    LPAREN  shift, and go to state 86
+
+    type  转到状态 286
+
+
+State 241
+
+   54 let: LET pat EQU . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 287
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 242
+
+   85 match: MATCH LPAREN exp . RPAREN LCBRACK match-params RCBRACK
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    RPAREN      shift, and go to state 288
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+
+State 243
+
+   21 stmt: RETURN exp SEMICOLON .
+
+    $default  reduce using rule 21 (stmt)
+
+
+State 244
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  137 while: WHILE LPAREN exp . RPAREN block
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    RPAREN      shift, and go to state 289
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+
+State 245
+
+  172 enum_exp: exp COMMA . enum_exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 184
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    enum_exp      转到状态 290
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 246
+
+  178 array_lit: LBRACK enum_exp RBRACK .
+
+    $default  reduce using rule 178 (array_lit)
+
+
+State 247
+
+   70 address-mut: AND MUT exp .
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    REMAINDER   [reduce using rule 70 (address-mut)]
+    LOGICAND    [reduce using rule 70 (address-mut)]
+    LOGICOR     [reduce using rule 70 (address-mut)]
+    LESSEQU     [reduce using rule 70 (address-mut)]
+    GREATEREQU  [reduce using rule 70 (address-mut)]
+    LESS        [reduce using rule 70 (address-mut)]
+    GREATER     [reduce using rule 70 (address-mut)]
+    LOGICEQU    [reduce using rule 70 (address-mut)]
+    NOTEQU      [reduce using rule 70 (address-mut)]
+    ADD         [reduce using rule 70 (address-mut)]
+    SUB         [reduce using rule 70 (address-mut)]
+    MUL         [reduce using rule 70 (address-mut)]
+    DIV         [reduce using rule 70 (address-mut)]
+    $default    reduce using rule 70 (address-mut)
+
+
+State 248
+
+  102 exp: LPAREN exp RPAREN .
+
+    $default  reduce using rule 102 (exp)
+
+
+State 249
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  135    | exp REMAINDER exp .
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    REMAINDER   [reduce using rule 135 (rem)]
+    LOGICAND    [reduce using rule 135 (rem)]
+    LOGICOR     [reduce using rule 135 (rem)]
+    LESSEQU     [reduce using rule 135 (rem)]
+    GREATEREQU  [reduce using rule 135 (rem)]
+    LESS        [reduce using rule 135 (rem)]
+    GREATER     [reduce using rule 135 (rem)]
+    LOGICEQU    [reduce using rule 135 (rem)]
+    NOTEQU      [reduce using rule 135 (rem)]
+    ADD         [reduce using rule 135 (rem)]
+    SUB         [reduce using rule 135 (rem)]
+    MUL         [reduce using rule 135 (rem)]
+    DIV         [reduce using rule 135 (rem)]
+    $default    reduce using rule 135 (rem)
+
+
+State 250
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  127    | exp LOGICAND exp .
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    REMAINDER  [reduce using rule 127 (and)]
+    $default   reduce using rule 127 (and)
+
+
+State 251
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  126   | exp LOGICOR exp .
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    REMAINDER  [reduce using rule 126 (or)]
+    $default   reduce using rule 126 (or)
+
+
+State 252
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  133         | exp LESSEQU exp .
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+    ADD        shift, and go to state 206
+    SUB        shift, and go to state 207
+    MUL        shift, and go to state 208
+    DIV        shift, and go to state 209
+
+    REMAINDER  [reduce using rule 133 (less-equ)]
+    $default   reduce using rule 133 (less-equ)
+
+
+State 253
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  134            | exp GREATEREQU exp .
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+    ADD        shift, and go to state 206
+    SUB        shift, and go to state 207
+    MUL        shift, and go to state 208
+    DIV        shift, and go to state 209
+
+    REMAINDER  [reduce using rule 134 (greater-equ)]
+    $default   reduce using rule 134 (greater-equ)
+
+
+State 254
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  131     | exp LESS exp .
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+    ADD        shift, and go to state 206
+    SUB        shift, and go to state 207
+    MUL        shift, and go to state 208
+    DIV        shift, and go to state 209
+
+    REMAINDER  [reduce using rule 131 (less)]
+    $default   reduce using rule 131 (less)
+
+
+State 255
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  132        | exp GREATER exp .
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+    ADD        shift, and go to state 206
+    SUB        shift, and go to state 207
+    MUL        shift, and go to state 208
+    DIV        shift, and go to state 209
+
+    REMAINDER  [reduce using rule 132 (greater)]
+    $default   reduce using rule 132 (greater)
+
+
+State 256
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  128      | exp LOGICEQU exp .
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    REMAINDER  [reduce using rule 128 (equal)]
+    $default   reduce using rule 128 (equal)
+
+
+State 257
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  129          | exp NOTEQU exp .
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    REMAINDER  [reduce using rule 129 (not-equal)]
+    $default   reduce using rule 129 (not-equal)
+
+
+State 258
+
+  122 add: exp . ADD exp
+  122    | exp ADD exp .
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+    MUL        shift, and go to state 208
+    DIV        shift, and go to state 209
+
+    REMAINDER  [reduce using rule 122 (add)]
+    $default   reduce using rule 122 (add)
+
+
+State 259
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  123    | exp SUB exp .
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+    MUL        shift, and go to state 208
+    DIV        shift, and go to state 209
+
+    REMAINDER  [reduce using rule 123 (sub)]
+    $default   reduce using rule 123 (sub)
+
+
+State 260
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  124    | exp MUL exp .
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+
+    REMAINDER  [reduce using rule 124 (mul)]
+    $default   reduce using rule 124 (mul)
+
+
+State 261
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  125    | exp DIV exp .
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER  shift, and go to state 197
+
+    REMAINDER  [reduce using rule 125 (div)]
+    $default   reduce using rule 125 (div)
+
+
+State 262
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  159 assign: field_lookup assign_type exp .
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    REMAINDER   [reduce using rule 159 (assign)]
+    LOGICAND    [reduce using rule 159 (assign)]
+    LOGICOR     [reduce using rule 159 (assign)]
+    LESSEQU     [reduce using rule 159 (assign)]
+    GREATEREQU  [reduce using rule 159 (assign)]
+    LESS        [reduce using rule 159 (assign)]
+    GREATER     [reduce using rule 159 (assign)]
+    LOGICEQU    [reduce using rule 159 (assign)]
+    NOTEQU      [reduce using rule 159 (assign)]
+    ADD         [reduce using rule 159 (assign)]
+    SUB         [reduce using rule 159 (assign)]
+    MUL         [reduce using rule 159 (assign)]
+    DIV         [reduce using rule 159 (assign)]
+    $default    reduce using rule 159 (assign)
+
+
+State 263
+
+  149 field: ID .
+  153 array_index: ID . LBRACK exp RBRACK
+  156 fn-call: ID . LPAREN exps RPAREN
+  157        | ID . LPAREN RPAREN
+
+    LBRACK  shift, and go to state 166
+    LPAREN  shift, and go to state 174
+
+    $default  reduce using rule 149 (field)
+
+
+State 264
+
+  150 field: field_lookup .
+
+    $default  reduce using rule 150 (field)
+
+
+State 265
+
+  148 field_lookup: field . DOT field
+  148             | field DOT field .
+
+    $default  reduce using rule 148 (field_lookup)
+
+
+State 266
+
+  151 field: array_index .
+  155 array_index: array_index . LBRACK exp RBRACK
+
+    LBRACK  shift, and go to state 212
+
+    $default  reduce using rule 151 (field)
+
+
+State 267
+
+  152 field: fn-call .
+  154 array_index: fn-call . LBRACK exp RBRACK
+
+    LBRACK  shift, and go to state 214
+
+    $default  reduce using rule 152 (field)
+
+
+State 268
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  155 array_index: array_index LBRACK exp . RBRACK
+
+    RBRACK      shift, and go to state 291
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+
+State 269
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  160 assign: array_index assign_type exp .
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    REMAINDER   [reduce using rule 160 (assign)]
+    LOGICAND    [reduce using rule 160 (assign)]
+    LOGICOR     [reduce using rule 160 (assign)]
+    LESSEQU     [reduce using rule 160 (assign)]
+    GREATEREQU  [reduce using rule 160 (assign)]
+    LESS        [reduce using rule 160 (assign)]
+    GREATER     [reduce using rule 160 (assign)]
+    LOGICEQU    [reduce using rule 160 (assign)]
+    NOTEQU      [reduce using rule 160 (assign)]
+    ADD         [reduce using rule 160 (assign)]
+    SUB         [reduce using rule 160 (assign)]
+    MUL         [reduce using rule 160 (assign)]
+    DIV         [reduce using rule 160 (assign)]
+    $default    reduce using rule 160 (assign)
+
+
+State 270
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  154 array_index: fn-call LBRACK exp . RBRACK
+
+    RBRACK      shift, and go to state 292
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+
+State 271
+
+   10 funct: FN ID LPAREN fn_params RPAREN ELEMENTSELECT EXCL block .
+
+    $default  reduce using rule 10 (funct)
+
+
+State 272
+
+    9 funct: FN ID LPAREN fn_params RPAREN ELEMENTSELECT type block .
+
+    $default  reduce using rule 9 (funct)
+
+
+State 273
+
+   31 ctor-types: type COMMA ctor-types .
+
+    $default  reduce using rule 31 (ctor-types)
+
+
+State 274
+
+   77 enum-ctors: pat COMMA . enum-ctors
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat         转到状态 219
+    deref-pat   转到状态 36
+    name_bind   转到状态 37
+    array_pat   转到状态 38
+    enum_pat    转到状态 39
+    enum-ctors  转到状态 293
+    struct_pat  转到状态 40
+    prim_lit    转到状态 41
+
+
+State 275
+
+   76 enum_pat: ID QUALIFIER ID LPAREN enum-ctors RPAREN .
+
+    $default  reduce using rule 76 (enum_pat)
+
+
+State 276
+
+   41 type: BOX LESS type GREATER .
+
+    $default  reduce using rule 41 (type)
+
+
+State 277
+
+  171 enum_lit: ID QUALIFIER ID LPAREN . enum_exp RPAREN
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 184
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    enum_exp      转到状态 294
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 278
+
+  153 array_index: ID LBRACK exp RBRACK .
+
+    $default  reduce using rule 153 (array_index)
+
+
+State 279
+
+  177 id_bind: ID COLON . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 295
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 280
+
+  174 struct_lit: ID LCBRACK id_binds RCBRACK .
+
+    $default  reduce using rule 174 (struct_lit)
+
+
+State 281
+
+  175 id_binds: id_bind COMMA . id_binds
+
+    ID  shift, and go to state 231
+
+    id_binds  转到状态 296
+    id_bind   转到状态 233
+
+
+State 282
+
+  156 fn-call: ID LPAREN exps RPAREN .
+
+    $default  reduce using rule 156 (fn-call)
+
+
+State 283
+
+   83 exps: exp COMMA . exps
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    exps          转到状态 297
+    match         转到状态 110
+    exp           转到状态 236
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 284
+
+   50 box_new: BOX QUALIFIER NEW LPAREN . exp RPAREN
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 298
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 285
+
+  139 if: IF LPAREN exp RPAREN . block ELSE block
+  140   | IF LPAREN exp RPAREN . block
+
+    LCBRACK  shift, and go to state 58
+
+    block  转到状态 299
+
+
+State 286
+
+   46 type: type . SEMICOLON LITDEC
+   52 let: LET pat COLON type .
+   53    | LET pat COLON type . EQU exp
+
+    SEMICOLON  shift, and go to state 163
+    EQU        shift, and go to state 300
+
+    SEMICOLON  [reduce using rule 52 (let)]
+
+
+State 287
+
+   54 let: LET pat EQU exp .
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    $default  reduce using rule 54 (let)
+
+
+State 288
+
+   85 match: MATCH LPAREN exp RPAREN . LCBRACK match-params RCBRACK
+
+    LCBRACK  shift, and go to state 301
+
+
+State 289
+
+  137 while: WHILE LPAREN exp RPAREN . block
+
+    LCBRACK  shift, and go to state 58
+
+    block  转到状态 302
+
+
+State 290
+
+  172 enum_exp: exp COMMA enum_exp .
+
+    $default  reduce using rule 172 (enum_exp)
+
+
+State 291
+
+  155 array_index: array_index LBRACK exp RBRACK .
+
+    $default  reduce using rule 155 (array_index)
+
+
+State 292
+
+  154 array_index: fn-call LBRACK exp RBRACK .
+
+    $default  reduce using rule 154 (array_index)
+
+
+State 293
+
+   77 enum-ctors: pat COMMA enum-ctors .
+
+    $default  reduce using rule 77 (enum-ctors)
+
+
+State 294
+
+  171 enum_lit: ID QUALIFIER ID LPAREN enum_exp . RPAREN
+
+    RPAREN  shift, and go to state 303
+
+
+State 295
+
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+  177 id_bind: ID COLON exp .
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    $default  reduce using rule 177 (id_bind)
+
+
+State 296
+
+  175 id_binds: id_bind COMMA id_binds .
+
+    $default  reduce using rule 175 (id_binds)
+
+
+State 297
+
+   83 exps: exp COMMA exps .
+
+    $default  reduce using rule 83 (exps)
+
+
+State 298
+
+   50 box_new: BOX QUALIFIER NEW LPAREN exp . RPAREN
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    RPAREN      shift, and go to state 304
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+
+State 299
+
+  139 if: IF LPAREN exp RPAREN block . ELSE block
+  140   | IF LPAREN exp RPAREN block .
+
+    ELSE  shift, and go to state 305
+
+    $default  reduce using rule 140 (if)
+
+
+State 300
+
+   53 let: LET pat COLON type EQU . exp
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 88
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    BOX      shift, and go to state 89
+    IF       shift, and go to state 90
+    LOOP     shift, and go to state 92
+    MATCH    shift, and go to state 93
+    WHILE    shift, and go to state 95
+    LBRACK   shift, and go to state 96
+    AND      shift, and go to state 98
+    EXCL     shift, and go to state 99
+    LPAREN   shift, and go to state 100
+    SUB      shift, and go to state 101
+    MUL      shift, and go to state 102
+
+    box_new       转到状态 105
+    address       转到状态 107
+    address-mut   转到状态 108
+    deref         转到状态 109
+    match         转到状态 110
+    exp           转到状态 306
+    add           转到状态 112
+    sub           转到状态 113
+    mul           转到状态 114
+    div           转到状态 115
+    or            转到状态 116
+    and           转到状态 117
+    equal         转到状态 118
+    not-equal     转到状态 119
+    minus         转到状态 120
+    less          转到状态 121
+    greater       转到状态 122
+    less-equ      转到状态 123
+    greater-equ   转到状态 124
+    rem           转到状态 125
+    not           转到状态 126
+    while         转到状态 127
+    loop          转到状态 128
+    if            转到状态 129
+    lit           转到状态 130
+    prim_lit      转到状态 131
+    field_lookup  转到状态 132
+    field         转到状态 133
+    array_index   转到状态 134
+    fn-call       转到状态 135
+    assign        转到状态 136
+    comp_lit      转到状态 137
+    enum_lit      转到状态 138
+    struct_lit    转到状态 139
+    array_lit     转到状态 140
+
+
+State 301
+
+   85 match: MATCH LPAREN exp RPAREN LCBRACK . match-params RCBRACK
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat           转到状态 307
+    deref-pat     转到状态 36
+    name_bind     转到状态 37
+    array_pat     转到状态 38
+    enum_pat      转到状态 39
+    struct_pat    转到状态 40
+    match-params  转到状态 308
+    match-param   转到状态 309
+    pats          转到状态 310
+    prim_lit      转到状态 41
+
+
+State 302
+
+  137 while: WHILE LPAREN exp RPAREN block .
+
+    $default  reduce using rule 137 (while)
+
+
+State 303
+
+  171 enum_lit: ID QUALIFIER ID LPAREN enum_exp RPAREN .
+
+    $default  reduce using rule 171 (enum_lit)
+
+
+State 304
+
+   50 box_new: BOX QUALIFIER NEW LPAREN exp RPAREN .
+
+    $default  reduce using rule 50 (box_new)
+
+
+State 305
+
+  139 if: IF LPAREN exp RPAREN block ELSE . block
+
+    LCBRACK  shift, and go to state 58
+
+    block  转到状态 311
+
+
+State 306
+
+   53 let: LET pat COLON type EQU exp .
+  122 add: exp . ADD exp
+  123 sub: exp . SUB exp
+  124 mul: exp . MUL exp
+  125 div: exp . DIV exp
+  126 or: exp . LOGICOR exp
+  127 and: exp . LOGICAND exp
+  128 equal: exp . LOGICEQU exp
+  129 not-equal: exp . NOTEQU exp
+  131 less: exp . LESS exp
+  132 greater: exp . GREATER exp
+  133 less-equ: exp . LESSEQU exp
+  134 greater-equ: exp . GREATEREQU exp
+  135 rem: exp . REMAINDER exp
+
+    REMAINDER   shift, and go to state 197
+    LOGICAND    shift, and go to state 198
+    LOGICOR     shift, and go to state 199
+    LESSEQU     shift, and go to state 200
+    GREATEREQU  shift, and go to state 201
+    LESS        shift, and go to state 202
+    GREATER     shift, and go to state 203
+    LOGICEQU    shift, and go to state 204
+    NOTEQU      shift, and go to state 205
+    ADD         shift, and go to state 206
+    SUB         shift, and go to state 207
+    MUL         shift, and go to state 208
+    DIV         shift, and go to state 209
+
+    $default  reduce using rule 53 (let)
+
+
+State 307
+
+   89 pats: pat . INCLUOR pats
+   90     | pat .
+
+    INCLUOR  shift, and go to state 312
+
+    $default  reduce using rule 90 (pats)
+
+
+State 308
+
+   85 match: MATCH LPAREN exp RPAREN LCBRACK match-params . RCBRACK
+
+    RCBRACK  shift, and go to state 313
+
+
+State 309
+
+   86 match-params: match-param . COMMA match-params
+   87             | match-param .
+
+    COMMA  shift, and go to state 314
+
+    $default  reduce using rule 87 (match-params)
+
+
+State 310
+
+   88 match-param: pats . RARROW block
+
+    RARROW  shift, and go to state 315
+
+
+State 311
+
+  139 if: IF LPAREN exp RPAREN block ELSE block .
+
+    $default  reduce using rule 139 (if)
+
+
+State 312
+
+   89 pats: pat INCLUOR . pats
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat         转到状态 307
+    deref-pat   转到状态 36
+    name_bind   转到状态 37
+    array_pat   转到状态 38
+    enum_pat    转到状态 39
+    struct_pat  转到状态 40
+    pats        转到状态 316
+    prim_lit    转到状态 41
+
+
+State 313
+
+   85 match: MATCH LPAREN exp RPAREN LCBRACK match-params RCBRACK .
+
+    $default  reduce using rule 85 (match)
+
+
+State 314
+
+   86 match-params: match-param COMMA . match-params
+
+    LITDEC   shift, and go to state 19
+    ID       shift, and go to state 20
+    LITSTR   shift, and go to state 21
+    LITCHAR  shift, and go to state 22
+    T        shift, and go to state 23
+    F        shift, and go to state 24
+    MUT      shift, and go to state 25
+    REF      shift, and go to state 26
+    LBRACK   shift, and go to state 27
+    AND      shift, and go to state 28
+    LPAREN   shift, and go to state 29
+    SUB      shift, and go to state 31
+    UNDER    shift, and go to state 32
+
+    pat           转到状态 307
+    deref-pat     转到状态 36
+    name_bind     转到状态 37
+    array_pat     转到状态 38
+    enum_pat      转到状态 39
+    struct_pat    转到状态 40
+    match-params  转到状态 317
+    match-param   转到状态 309
+    pats          转到状态 310
+    prim_lit      转到状态 41
+
+
+State 315
+
+   88 match-param: pats RARROW . block
+
+    LCBRACK  shift, and go to state 58
+
+    block  转到状态 318
+
+
+State 316
+
+   89 pats: pat INCLUOR pats .
+
+    $default  reduce using rule 89 (pats)
+
+
+State 317
+
+   86 match-params: match-param COMMA match-params .
+
+    $default  reduce using rule 86 (match-params)
+
+
+State 318
+
+   88 match-param: pats RARROW block .
+
+    $default  reduce using rule 88 (match-param)

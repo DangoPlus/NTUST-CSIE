@@ -1,0 +1,19 @@
+let mut c;
+let mut a = 15;
+    
+fn add(a:int, b:int) -> int
+{
+  return a+b;
+}
+    
+fn main() 
+{
+  c = add(a, 10);
+  if (c > 10) {
+    print -c;
+  }
+  else {
+    print c;
+  }
+  println "Hello World";
+}

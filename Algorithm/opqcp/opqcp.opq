@@ -1,0 +1,118 @@
+/* Licensed material, Copyright (c) 1985, University of Utah. */
+extern struct l1{int l2;char*l3;char*l4;int l5;short l6;char l7;}l8[];struct
+l1*l9();struct l1*l10();struct l1*l11();struct l1*l12();long l13();char*l14()
+;char*l15();char*l16();typedef char*l17;typedef int l18;typedef char l19;
+typedef char*l20;extern l20 l21();extern long l22();typedef struct l23{int l24
+;struct l23*l25,*l26;}l27;typedef struct l28{int l24;struct l28*l25,*l26;l27*
+l29;}l28;typedef struct l30 l31;struct l30{int l24;l31*l25,*l26;l17 l32;l20
+l33;};extern l31*l34();extern l31*l35();typedef struct{int l36;l31*l37[1];}
+l38;extern l38*l39();extern l31**l40();extern l41();extern l42();typedef
+unsigned char l43;typedef unsigned short l44;typedef unsigned int l45;typedef
+unsigned long l46;typedef unsigned short l47;typedef struct l48{short l49[1];
+}*l50;typedef struct l51{int l52[15];}l51;typedef struct l53{long l52[2];}l54
+;typedef long l55;typedef char*l56;typedef long*l57;typedef l46 l58;typedef
+long l59;typedef long l60;typedef long l61;typedef short l62;typedef long l63
+;typedef l44 l64;typedef l44 l65;typedef l46 l66;typedef long l67;typedef
+struct l68{l67 l69[(((256)+(((sizeof(l67)*8))-1))/((sizeof(l67)*8)))];}l68;
+struct l70{l62 l71;l58 l72;unsigned short l73;short l74;l64 l75;l65 l76;l62
+l77;l63 l78;l61 l79;int l80;l61 l81;int l82;l61 l83;int l84;long l85;long l86
+;long l87[2];};extern char l88[];l17 l89[] = {"int","char","float","double",
+"struct","union","enum","long","short","unsigned","auto","extern","register",
+"typedef","static","goto","return","sizeof","break","continue","if","else",
+"for","do","while","switch","case","default","entry","fortran","asm","main",
+"void"};int l90 = sizeof l89/sizeof(l17);main(l91,l92)int l91;l17 l92[];{l18
+l93 = 0,l94 = 0;int l95,l96,l97,l98,l99;l38*l100,*l101;l31*l102;l17*l103,*
+l104,l105;static char l106[1024] = {'\0'};char l107[1024],l108[1024];struct
+l70 l109;struct l1*l110,*l111,*l112,*l12();l62 l113;l58 l114;l17 l115,l116,
+l117,l118();char l119,*l120,l121[1024],*l122,l123;int l124,l125;enum{l126,
+l127,l128,l129,l130}l131,l132;static l17 l133[] = {"none","symbol","string",
+"number","other"};l18 l134;l17 l135 = "=!<>&|+-*/%&^";int l136 = 0;static char
+l137[5000][6];for(l95=0;l95<5000/1000;l95++)for(l96=0;l96<=9;l96++)for(l97=0;
+l97<=9;l97++)for(l98=0;l98<=9;l98++){l120 = l137[l136++];*l120++ = 'l';if(l95
+)*l120++ = '0'+l95;if(l95||l96)*l120++ = '0'+l96;if(l95||l96||l97)*l120++ = 
+'0'+l97;*l120++ = '0'+l98;*l120 = '\0';}l100 = l39(1000);for(l95=0,l103 = l89
+;l95<l90;l95++,l103++)l34(*l103,l100);for(l99=1,l104 = &l92[1],l105 = *l104;
+l99<l91;l99++,l104++,l105 = *l104){if(l105[0]!= '-')break;if(l138(l105,"-d")
+== 0){if(++l99>= l91-1)break;l105 = *++l104;if((l110 = l9(l105,"r")) == 0){
+l16(l107,"opqcp: Can't open dictionary %s\n",l105);l139(l107);l140(1);}while(
+l14(l107,1024,l110)!= 0){l107[l141(l107)-1] = '\0';if((l117 = l118(l107,' '))
+!= 0)*l117++ = '\0';l116 = (char*)l21(l141(l107)+1);l142(l116,l107);l102 = 
+l34(l116,l100);if(l117!= 0){l102->l33 = (char*)l21(l141(l117)+1);l142(l102->
+l33,l117);}}l143(l110);}else if(l144(l105,"-I",2) == 0){l145(l106," ");l145(
+l106,l105);}else if(l138(l105,"-t") == 0){l94 = 1;goto l146;}else if(l138(
+l105,"-f") == 0){l146:l93 = 1;l111 = (&l8[0]);l112 = (&l8[1]);}else break;}if
+(l105[0] == '-'||!l93&&l91-l99<2){l147((&l8[2]),"%s\n%s\n",
+"usage: opqcp [-d dict]* [-Idir]* [srcfile]+ destdir",
+"  or   opqcp [-d dict]* -f");l140(2);}if(!l93){if(l70(l115 = l92[l91-1],&
+l109) == -1){l16(l107,"opqcp: Can't stat directory %s\n",l115);l139(l107);
+l140(1);}if(!(l109.l73&0040000)){l147((&l8[2]),
+"opqcp: %s is not a directory.\n",l115);l140(1);}}for(;l93||l99<l91-1;l99++,
+l104++){if(l93)l105 = "(stdin)";else{l105 = *l104;if(l70(l105,&l109) == -1){
+l16(l107,"opqcp: Can't stat input file %s\n",l105);l139(l107);continue;}if(!(
+l109.l73&0100000)){l147((&l8[2]),"opqcp: %s is not a plain file.\n",l105);
+continue;}l113 = l109.l71;l114 = l109.l72;l16(l107,"%s/%s",l115,l105);if(l70(
+l107,&l109) == 0){if(l109.l71 == l113&&l109.l72 == l114){l147((&l8[2]),
+"opqcp: Can't copy file %s to itself.\n",l105);continue;}if(!(l109.l73&
+0100000)){l147((&l8[2]),"opqcp: %s is not a plain file.\n",l107);continue;}}
+if((l112 = l9(l107,"w")) == 0){l16(l107,"opqcp: Can't write file %s",l105);
+l139(l107);continue;}l148("/* Licensed material, Copyright ",l112);l148(
+"(c) 1985, University of Utah. */\n",l112);l16(l108,"cc -E %s %s",l106,l105);
+if((l111 = l12(l108,"r")) == 0){l16(l108,"opqcp: Couldn't start cpp on %s.",
+l105);l139(l108);l143(l112);l149(l107);continue;}}l101 = l39(1000);l136 = 0;
+l119 = '\n';(l125 = 0);l132 = l126;while(l119!= (-1)){(l122 = l121,*l122 = 
+'\0');l131 = l126;l134 = 0;while(((l88+1)[l119]&010)){l134 = 1;if(l119!= '\n'
+)(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111)));
+else{(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111)
+));if(l119 == '#'){while(l119!= '\n'&&l119!= (-1))(l119 = (--(l111)->l2>=0?(
+int)(*(unsigned char*)(l111)->l3++):l150(l111)));}}}if(((l88+1)[l119]&(01|02)
+)||l119 == '_'){l131 = l127;((*l122++ = l119,*l122 = '\0'),(l119 = (--(l111)
+->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111))));while(((l88+1)[
+l119]&(01|02|04))||l119 == '_')((*l122++ = l119,*l122 = '\0'),(l119 = (--(
+l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111))));if((l102 = 
+l35(l121,l100))!= 0){if(l102->l33!= 0){l142(l121,l102->l33);}}else{if((l102 = 
+l35(l121,l101)) == 0){l116 = (char*)l21(l141(l121)+1);l142(l116,l121);l102 = 
+l34(l116,l101);l102->l33 = l137[++l136];}l142(l121,l102->l33);}}else if(l119
+== '"'||l119 == '\''){l131 = l128;l123 = l119;((*l122++ = l119,*l122 = '\0'),
+(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111))));
+while(l119!= l123){if(l119!= '\\')((*l122++ = l119,*l122 = '\0'),(l119 = (--(
+l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111))));else{((*l122
+++ = l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111
+)->l3++):l150(l111))));if(l123!= '"'||l119!= '\n')((*l122++ = l119,*l122 = 
+'\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111
+))));else{((*l122++ = l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(
+unsigned char*)(l111)->l3++):l150(l111))));if(l141(l121)+l125>77)l148("\n",
+l112);l148(l121,l112);(l125 = 0);(l122 = l121,*l122 = '\0');}}}((*l122++ = 
+l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3
+++):l150(l111))));}else if(((l88+1)[l119]&04)){l151:l131 = l129;if(l119 == 
+'0'){((*l122++ = l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned
+char*)(l111)->l3++):l150(l111))));if(l119 == 'x'||l119 == 'X'){((*l122++ = 
+l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3
+++):l150(l111))));while(((l88+1)[l119]&04)||l119>= 'a'&&l119<= 'f'||l119>= 
+'A'&&l119<= 'F')((*l122++ = l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)
+(*(unsigned char*)(l111)->l3++):l150(l111))));}else while(((l88+1)[l119]&04))
+((*l122++ = l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned char
+*)(l111)->l3++):l150(l111))));}else while(((l88+1)[l119]&04))((*l122++ = l119
+,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):
+l150(l111))));if(l119 == 'l'||l119 == 'L')((*l122++ = l119,*l122 = '\0'),(
+l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111))));
+else{if(l119 == '.'){((*l122++ = l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?
+(int)(*(unsigned char*)(l111)->l3++):l150(l111))));while(((l88+1)[l119]&04))(
+(*l122++ = l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*
+)(l111)->l3++):l150(l111))));}if(l119 == 'e'||l119 == 'E'){((*l122++ = l119,*
+l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):
+l150(l111))));if(l119 == '+'||l119 == '-')((*l122++ = l119,*l122 = '\0'),(
+l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111))));
+while(((l88+1)[l119]&04))((*l122++ = l119,*l122 = '\0'),(l119 = (--(l111)->l2
+>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111))));}}}else if(l119!= (-1)
+){l131 = l130;if(l119 == '.'){((*l122++ = l119,*l122 = '\0'),(l119 = (--(l111
+)->l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111))));if(((l88+1)[l119]
+&04))goto l151;}else{if(l118(l135,l119)!= 0)while(l118(l135,l119)!= 0)((*l122
+++ = l119,*l122 = '\0'),(l119 = (--(l111)->l2>=0?(int)(*(unsigned char*)(l111
+)->l3++):l150(l111))));else((*l122++ = l119,*l122 = '\0'),(l119 = (--(l111)->
+l2>=0?(int)(*(unsigned char*)(l111)->l3++):l150(l111))));}}if(l94)l147(l112,
+"type = %s, token = `",l133[(int)l131]);l124 = l141(l121);if(l124+l125>77){
+l148("\n",l112);(l125 = 0);}else if((l132==l127||l132==l129)&&(l131==l127||
+l131==l129)||l121[0] == '='&&l134){l148(" ",l112);l125++;}l148(l121,l112);
+l125+= l124;if(l121[l124-1] == '='&&((l88+1)[l119]&010)){l148(" ",l112);l125
+++;}if(l94)l147(l112,"'\n");l132 = l131;}l148("\n",l112);if(l93)l140(0);else{
+l152(l111);l143(l112);l42(l101);}}}

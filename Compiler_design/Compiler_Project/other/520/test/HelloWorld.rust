@@ -1,0 +1,16 @@
+// Hello World Example
+let a: float = 4;
+let b: int = 7;
+let c = 10.11;
+let mut d = 10;
+
+let mut f[int, 10];
+
+fn hello(x: int) {
+  let mut e = x;
+}
+
+fn main(x: int) {
+  // Print text to the console
+  let mut e = 10;
+}

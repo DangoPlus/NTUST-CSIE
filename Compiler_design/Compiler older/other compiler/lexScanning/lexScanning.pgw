@@ -1,0 +1,11 @@
+[Application]
+WindowPlacement=2 3 -1 -1 -1 -1 132 174 900 704
+[Editor1]
+FileName=.\lexScanning.l
+ReadOnly=0
+WindowPlacement1=2 3 -1 -1 -4 -30 0 0 866 436
+WindowOrder1=1
+Position001=0 45
+Cursor001=0 1 0 1
+SyntaxColouring=1
+TargetSyntaxColouring=3

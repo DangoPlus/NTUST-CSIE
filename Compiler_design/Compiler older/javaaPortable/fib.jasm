@@ -1,0 +1,148 @@
+class fib
+{
+/* Line5: */
+/* Line6: */
+/* Line8:const int n = 8; */
+/* Line9: */
+  method public static int recFibonacci(int)
+  max_stack 30
+  max_locals 15
+  {
+/* Line11:int recFibonacci(int n) */
+/* Line12:{ */
+    iload 0
+    sipush 1
+    isub /* a and b are at stack top */
+    ifeq L0
+    iconst_0 /* false = 0 */
+    goto L1
+L0:
+    iconst_1 /* true = 1 */
+L1:
+    iload 0
+    sipush 2
+    isub /* a and b are at stack top */
+    ifeq L2
+    iconst_0 /* false = 0 */
+    goto L3
+L2:
+    iconst_1 /* true = 1 */
+L3:
+    ior
+    ifeq L4
+/* Line13:  if ((n == 1) || (n == 2)) */
+    sipush 1
+    ireturn
+/* Line14:    return 1; */
+/* Line15: */
+L4:
+    iload 0
+    sipush 1
+    isub
+    invokestatic int fib.recFibonacci(int)
+    iload 0
+    sipush 2
+    isub
+    invokestatic int fib.recFibonacci(int)
+    iadd
+    ireturn
+/* Line16:  return recFibonacci(n-1)+recFibonacci(n-2); */
+  }
+/* Line17:} */
+/* Line18: */
+  method public static int itFibonacci(int)
+  max_stack 30
+  max_locals 15
+  {
+/* Line20:int itFibonacci(int n) */
+/* Line21:{ */
+/* Line22:  int Fn, FNminus1, temp; */
+/* Line23: */
+    sipush 1
+    istore 1
+/* Line24:  Fn = 1; */
+    sipush 1
+    istore 2
+/* Line25:  FNminus1 = 1; */
+L5:
+    iload 0
+    sipush 2
+    isub /* a and b are at stack top */
+    ifgt L6
+    iconst_0 /* false = 0 */
+    goto L7
+L6:
+    iconst_1 /* true = 1 */
+L7:
+    ifeq L8
+/* Line26:  while (n > 2) */
+/* Line27:  { */
+    iload 1
+    istore 3
+/* Line28:    temp = Fn; */
+    iload 1
+    iload 2
+    iadd
+    istore 1
+/* Line29:    Fn = Fn + FNminus1; */
+    iload 3
+    istore 2
+/* Line30:    FNminus1 = temp; */
+    iload 0
+    sipush 1
+    isub
+    istore 0
+/* Line31:    n = n - 1; */
+    goto L5
+L8:
+/* Line32:  } */
+    iload 1
+    ireturn
+/* Line33:  return Fn; */
+  }
+/* Line34:} */
+/* Line35: */
+/* Line36: */
+  method public static void main(java.lang.String[])
+  max_stack 30
+  max_locals 15
+  {
+/* Line37:void main() */
+/* Line38:{ */
+/* Line39:  int resultof; */
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "N: " 
+    invokevirtual void java.io.PrintStream.print(java.lang.String)
+/* Line40:  print "N: "; */
+    getstatic java.io.PrintStream java.lang.System.out
+    sipush 8
+    invokevirtual void java.io.PrintStream.println(int)
+/* Line41:  println n; */
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "Result of recursive computation:" 
+    invokevirtual void java.io.PrintStream.print(java.lang.String)
+/* Line42:  print "Result of recursive computation:"; */
+    sipush 8
+    invokestatic int fib.recFibonacci(int)
+    istore 0
+/* Line43:  resultof = recFibonacci(n); */
+    getstatic java.io.PrintStream java.lang.System.out
+    iload 0
+    invokevirtual void java.io.PrintStream.println(int)
+/* Line44:  println resultof; */
+    getstatic java.io.PrintStream java.lang.System.out
+    ldc "Result of iterative computation:" 
+    invokevirtual void java.io.PrintStream.print(java.lang.String)
+/* Line45:  print "Result of iterative computation:"; */
+    sipush 8
+    invokestatic int fib.itFibonacci(int)
+    istore 0
+/* Line46:  resultof = itFibonacci(n); */
+    getstatic java.io.PrintStream java.lang.System.out
+    iload 0
+    invokevirtual void java.io.PrintStream.println(int)
+/* Line47:  println resultof; */
+    return
+  }
+/* Line48:} */
+}

@@ -1,0 +1,25 @@
+let mut c;
+let mut a = 20;
+
+
+fn div(a:int, b:int) -> int
+{
+  return a / b;
+}
+   
+fn mul(a:int, b:int) -> int
+{
+  return a * b;
+}
+    
+fn main() 
+{
+  c = mul(a, 15);
+  c = div(c, 30);
+  if (c > 10) {
+    println -c;
+  }
+  else {
+    println c;
+  }
+}
