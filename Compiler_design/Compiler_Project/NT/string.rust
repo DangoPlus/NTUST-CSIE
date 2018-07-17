@@ -1,6 +1,0 @@
-
-fn main() 
-{
-	let a = "Hello, How Are You!!!";
-    println a;
-}

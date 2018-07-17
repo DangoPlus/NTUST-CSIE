@@ -1,7 +1,0 @@
-make clean;make;./go_compiler < fib.go
-
-make clean;make;./go_compiler < HelloWorld.go
-
-make clean;make;./go_compiler < example.go
-
-make clean;make;./go_compiler < sigma.go 

@@ -1,1 +1,0 @@
-sed -e "s/=[ "$'t'"][ "$'t'"]*{/'= {/" ftpcmd.y.orig > ftpcmd.y
