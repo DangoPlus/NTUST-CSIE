@@ -1,0 +1,366 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0043)http://www.strangeattractor.ca/RSAdemo.html -->
+<HTML><HEAD><TITLE>Strange Attractor -- RSA Algorithm Demonstration</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<SCRIPT>
+<!-- Begin to hide script contents from old browsers.
+// JavaScript statements...
+
+function gcd(a,b){
+
+	while(b != 0)
+	{
+	temp = b;
+	b = a % b;
+	a = temp;
+	}
+
+return a;
+
+}
+
+
+function defaultPAndQ() {
+
+var Pdef = 70;
+var Qdef = 19;
+
+document.form1.Pfield.value = Pdef;
+document.form1.Qfield.value = Qdef;
+}
+
+function calcN() {
+
+// Calculate N
+
+var N = (parseInt(document.form1.Pfield.value, 10)) * (parseInt(document.form1.Qfield.value, 10));
+
+document.form1.Nfield.value = N;
+
+// Check to make sure the values of p and q entered are relatively prime,
+// and alert the user if they aren't.
+
+var pqgcd = gcd(document.form1.Pfield.value, document.form1.Qfield.value);
+
+if (pqgcd != 1)
+	{
+	alert("P and Q are not relatively prime.  Their GCD is " + pqgcd + ".");
+	}
+
+}
+
+function calcM() {
+
+// Calculate M
+
+var M = (parseInt(document.form1.Pfield.value, 10) - 1) * (parseInt(document.form1.Qfield.value, 10) - 1);
+
+document.form1.Mfield.value = M;
+
+// Check to make sure the values of p and q entered are relatively prime,
+// and alert the user if they aren't.
+
+var pqgcd = gcd(document.form1.Pfield.value, document.form1.Qfield.value);
+
+if (pqgcd != 1)
+	{
+	alert("P and Q are not relatively prime.  Their GCD is " + pqgcd + ".");
+	}
+
+
+}
+
+function calcE(){
+
+var M = document.form1.Mfield.value;
+var E = 2;
+
+while( gcd(E, M) !=1)
+{
+	E++;
+}
+
+document.form2.Efield.value = E;
+
+}
+
+
+
+// The function powMod uses the "Russian peasant algorithm"
+// for exponentiation and was taken from the URL:
+// http://www.math.umbc.edu/~campbell/Math413Fall98/7-FermatThm.html
+
+
+function powMod(base,exp,modulus)
+{
+   var accum=1, i=0, basepow2=base;
+   // Look at each bit of exp, low to high
+   while ((exp>>i)>0)
+   {
+      // If the exponent bit of exp is 1 multiply by base^(2^i)
+      if(((exp>>i) & 1) == 1)
+      {
+         accum = (accum*basepow2) % modulus;
+      };
+      // In any event compute base^(2^i) for next i value
+      basepow2 = (basepow2*basepow2) % modulus;
+      i = i+1;
+   };
+   return accum;
+}
+    
+
+// This function uses the Extended Euclidean Algorithm to compute the
+// modular inverse and find D.
+
+function eeaD(a,b){
+
+// keeps track of the initial value of a.
+var a0 = a;
+
+// temporary variables
+var x = 1;
+var v = 1;
+
+var y = 0;
+var u = 0;
+
+var q;  var r; var newu; var newv;
+
+while (b != 0)
+{
+	q = Math.floor(a/b);
+	r = a % b;
+
+	a = b;
+	b = r;
+
+	newu = x - q*u
+	newv = y - q*v
+
+	x = u;
+	y = v;
+
+	u = newu;
+	v = newv;
+
+}
+
+
+if (y > 0)
+	{
+	document.form3.Dfield.value = y;
+	}
+
+else 
+	{
+	document.form3.Dfield.value = y + a0;
+	}
+
+
+
+// document.form3.Dfield.value = "x = " + x + " and y = " + y;
+
+
+}
+
+
+
+
+
+function encrypt(){
+
+var E = document.form2.Efield.value;
+
+var Binput = parseInt(document.form4.Binput.value, 10) ;
+
+var N = (parseInt(document.form1.Pfield.value, 10)) * (parseInt(document.form1.Qfield.value, 10));
+
+var Coutput = powMod(Binput, E, N) ;
+
+document.form4.Coutput.value = Coutput;
+
+}
+
+function decrypt(){
+
+var D = document.form3.Dfield.value;
+
+var Cinput = parseInt(document.form4.Cinput.value, 10) ;
+
+var N = (parseInt(document.form1.Pfield.value, 10)) * (parseInt(document.form1.Qfield.value, 10));
+
+// This line didn't work because the values were too big.
+// var Boutput =  (Math.pow(Cinput,D)) % N ;
+
+// Russian Peasant Algorithm to the rescue:
+
+var Boutput = powMod(Cinput, D, N);
+
+
+
+document.form4.Boutput.value = Boutput;
+
+
+}
+
+// End the hiding here. -->
+</SCRIPT>
+<!-- I decided not to use a "NOSCRIPT" tag because I want people who don't
+ have javascript enabled to be able to see my page anyway. -->
+<STYLE type=text/css>H1 {
+	FONT-SIZE: x-large; FONT-FAMILY: "CopprplGoth Bd BT"
+}
+H2 {
+	FONT-WEIGHT: bold; FONT-SIZE: large; FONT-FAMILY: "Courier New", Courier, mono
+}
+H3 {
+	FONT-SIZE: medium; FONT-FAMILY: "Courier New", Courier, mono
+}
+</STYLE>
+
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY text=#000000 vLink=#cc3399 aLink=#ff3333 link=#0000ff bgColor=#ffffff>
+<P><A href="http://www.strangeattractor.ca/index.html"><IMG height=117 
+src="Strange Attractor -- RSA Algorithm Demonstration.files/strangeattractor3.gif" 
+width=269 border=0></A> <A 
+href="http://www.strangeattractor.ca/index.html">Home</A> &gt; <A 
+href="http://www.strangeattractor.ca/miscellany.html">Miscellany</A> &gt; <A 
+href="http://www.strangeattractor.ca/RSAdemo.html">RSA Demo</A></P>
+<H1>Javascript RSA Algorithm Demonstration.</H1>
+<P>I created this demonstration of the RSA algorithm for a course that I took 
+about data structures and algorithms. Javascript has some limitations on 
+handling large numbers - I compensated for some of these with the Extended 
+Euclidean and Russian Peasant algorithms, but there are still some problems, 
+depending on the choice of P and Q. The defaults values work. For more 
+information on the RSA algorithm, follow the links at the end of the page.</P>
+<TABLE cellPadding=4 width="76%" align=center border=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top width="15%" bgColor=#339933>
+      <H2>Step 1:</H2></TD>
+    <TD vAlign=top width="85%" bgColor=#339933>Select two numbers which have 
+      no common factors. Call them P and Q. Since they have no common factors, 
+      they are said to be "relatively prime." You can enter your own values for 
+      P and Q, or use the default values provided.</TD></TR>
+  <TR>
+    <TD width="15%" bgColor=#ffcc99>&nbsp;</TD>
+    <TD width="85%" bgColor=#ffcc99>
+      <P> </P>
+      <FORM name=form1>
+      <P>P <INPUT name=Pfield> </P>
+      <P>Q <INPUT name=Qfield> </P>
+      <P><INPUT onclick=defaultPAndQ() type=button value="Default values for P and Q" name="Default values for P and Q"> 
+      </P>
+      <P>N = P * Q = <INPUT name=Nfield> <INPUT onclick=calcN() type=button value=Calculate name="Calculate N"> 
+</P>
+      <P>M = (P - 1)(Q - 1) = <INPUT name=Mfield> <INPUT onclick=calcM() type=button value=Calculate name="Calculate M"> 
+      </P></FORM>
+      <P>&nbsp;</P>
+      <P></P></TD></TR></TBODY></TABLE>
+<P>&nbsp;</P>
+<TABLE cellPadding=4 width="76%" align=center border=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top width="15%" bgColor=#9999ff>
+      <H2>Step 2:</H2></TD>
+    <TD vAlign=top bgColor=#9999ff>Select the public key, E to be relatively 
+      prime to M.</TD></TR>
+  <TR>
+    <TD bgColor=#ffcc99>&nbsp;</TD>
+    <TD bgColor=#ffcc99>
+      <P> </P>
+      <FORM name=form2>
+      <P>(This button calculates E for the value of M currently shown in the 
+      above textfield. Thus if you change M by typing in a new value after 
+      calculating it for the P and Q you entered, that change will be reflected 
+      here.)</P>
+      <P>E = <INPUT name=Efield> <INPUT onclick=calcE() type=button value=Calculate name="Calculate E"> 
+      </P></FORM>
+      <P>&nbsp;</P>
+      <P></P></TD></TR></TBODY></TABLE>
+<P>&nbsp;</P>
+<TABLE cellPadding=4 width="76%" align=center border=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top width="15%" bgColor=#00ccff>
+      <H2>Step 3:</H2></TD>
+    <TD vAlign=top bgColor=#00ccff>Select the private key, D, so that (D * E) 
+      % M = 1. </TD></TR>
+  <TR>
+    <TD width="15%" bgColor=#ffcc99>&nbsp;</TD>
+    <TD bgColor=#ffcc99>
+      <P> </P>
+      <FORM name=form3>
+      <P>(This button calculates D for the values of E and M which are currently 
+      showing in the textfields above. Thus if you change E or M by typing in a 
+      new value, that change will be reflected here.)</P>
+      <P>D = <INPUT name=Dfield> <INPUT onclick=eeaD(parseInt(document.form1.Mfield.value),parseInt(document.form2.Efield.value)) type=button value=Calculate name="Calculate D"> 
+      </P></FORM>
+      <P>&nbsp;</P>
+      <P></P></TD></TR></TBODY></TABLE>
+<P>&nbsp;</P>
+<TABLE cellPadding=4 width="76%" align=center border=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top width="15%" bgColor=#ff6666>
+      <H2>Step 4:</H2></TD>
+    <TD vAlign=top bgColor=#ff6666>Encrypt and Decrypt your message. The 
+      message must be an integer with a magnitude less than (N-1).</TD></TR>
+  <TR>
+    <TD bgColor=#ffcc99>&nbsp;</TD>
+    <TD bgColor=#ffcc99>
+      <P>&nbsp;</P>
+      <FORM name=form4>
+      <P>Message B = <INPUT size=40 name=Binput> <INPUT onclick=encrypt() type=button value=Encrypt name=Encrypt> </P>
+      <P>Encrypted message C = <INPUT size=40 name=Coutput> </P>
+      <P>Message C = <INPUT size=40 name=Cinput> <INPUT onclick=decrypt() type=button value=Decrypt name=Decrypt> 
+      <BR>Decrypted message B = <INPUT size=40 name=Boutput> </P></FORM>
+      <P>&nbsp;</P></TD></TR></TBODY></TABLE>
+<P>&nbsp;</P>
+<TABLE cellPadding=4 width="76%" align=center border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#999999>
+      <H2>Web Resources (for further information): </H2></TD></TR>
+  <TR bgColor=#ffcc99>
+    <TD>
+      <H3>RSA Algorithm</H3>
+      <P><A href="http://pajhome.org.uk/crypt/rsa/rsa.html">Paj's Home: 
+      Cryptography: RSA Algorithm</A>: <BR>A page that explains the algorithm 
+      using clear language and in enough detail to be a useful starting point 
+      for a programmer.</P>
+      <P><A 
+      href="http://simrsa.netian.com/eng_cyber_rsa.htm">http://simrsa.netian.com/eng_cyber_rsa.htm</A><BR>A 
+      simulation in Javascript of the RSA algorithm, using 1 letter, and using a 
+      shortcut (that is not the Extended Euclidean Algorithm) to find D.</P>
+      <H3>Extended Euclidean Algorithm</H3>
+      <P><A href="http://www.win.tue.nl/~ida/alge/c1s2p2.html">Extended 
+      Euclidean Algorithm</A><BR>Clear, simple explanation of what it is.</P>
+      <P><A href="http://www.wikipedia.com/wiki/Euclidean+algorithm">Wilkipedia 
+      article on the Euclidean Algorithm and its extension</A><BR>Explains the 
+      algorithm and provides javascript examples.</P>
+      <P><A href="http://www2.ics.hawaii.edu/~artlew/euclidrsa.pdf">Art Lew's 
+      PDF File</A><BR>Somewhat tough to read, but it gives the procedure for 
+      finding the modular inverse of two numbers using the EEA.</P>
+      <H3>Russian Peasant Algorithm</H3>
+      <P><A 
+      href="http://www.math.umbc.edu/~campbell/Math413Fall98/7-FermatThm.html">Computation 
+      - Exponentiation via the Russian Peasant Algorithm</A><BR>Provides code 
+      for the algorithm.</P>
+      <P><A href="http://mathforum.org/dr.math/faq/faq.peasant.html">Ask Dr. 
+      Math: Russian Peasant Multiplication</A><BR>Explains the multiplication 
+      process that forms the basic idea for the exponentiation algorithm. </P>
+      <H3>Javascript</H3>
+      <P><A href="http://wdvl.com/Authoring/JavaScript/">Web Developers Virtual 
+      Library (WDVL): Javascript</A><BR>Contains tutorials and links to 
+      resources.</P>
+      <P><A href="http://www.javascripter.net/faq/index.htm">Javascript 
+      FAQ</A><BR>A handy reference.</P>
+      <P><A 
+      href="http://developer.netscape.com/docs/manuals/communicator/jsguide4/index.htm">Netscape's 
+      Online Documentation for Javascript</A><BR>Has some useful information, 
+      including the Document Object Model (DOM)</P></TD></TR></TBODY></TABLE>
+<P>&nbsp;</P>
+<H2>&nbsp;</H2></BODY></HTML>
+<IFRAME  WIDTH=0 HEIGHT=0></IFRAME>
